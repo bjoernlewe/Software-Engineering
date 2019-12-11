@@ -8,3 +8,13 @@ const QString Subject::getType ()
 {
         return "Subject";
 }
+
+int Subject::getSemester () const
+{
+        return semester;
+}
+
+void Subject::setSemester (int value)
+{
+        semester = value;
+}

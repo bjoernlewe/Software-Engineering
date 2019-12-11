@@ -11,12 +11,14 @@ GradedItem::GradedItem(QString name, int credits)
         }
         this->name = name;
         this->credits = credits;
+        grade1 = new Grade ();
+        grade2 = new Grade ();
+        grade3 = new Grade ();
 }
 
 GradedItem::~GradedItem()
 {
         qDebug () << "GradedItem::~GradedItem() called";
-        gradeList.clear ();
 }
 
 const QString GradedItem::getType ()
@@ -29,22 +31,51 @@ const QString GradedItem::getType ()
 bool GradedItem::addGrade (Grade grade)
 {
         qDebug () << "GradedItem::addGrade() called";
-        if (grade.getGrade () < 0) {
-                throw QString ("GradedItem::addGrade() : Grade object with negative grade constant was given");
+        if (grade1->getGrade () <= 0) {
+                setGrade1 (grade.getGrade ());
+                return true;
         }
-        gradeList.append (grade);
-        return true;
+        else if (grade2->getGrade () <= 0) {
+                setGrade2 (grade.getGrade ());
+                return true;
+        }
+        else if (grade3->getGrade () <= 0) {
+                setGrade3 (grade.getGrade ());
+                return true;
+        }
+        else{
+                throw  QString ("GradedItem::addGrade() : Too many Grades added to Object.");
+        }
 }
 
-bool GradedItem::removeGrade (Grade grade)
+
+bool GradedItem::removeGrade (int index)
 {
         qDebug () << "GradedItem::removeGrade() called";
-        for (int i = 0; i < gradeList.length (); i++) {
-                if (gradeList.at (i).getGrade () >= grade.getGrade ()
-                    && gradeList.at (i).getGrade () <= grade.getGrade ()) {
-                        gradeList.removeAt (i);
+        switch (index) {
+        case 1:
+                if (grade1 != nullptr) {
+                        delete grade1;
                         return true;
                 }
+                break;
+
+        case 2:
+                if (grade2 != nullptr) {
+                        delete grade2;
+                        return true;
+                }
+                break;
+
+        case 3:
+                if (grade3 != nullptr) {
+                        delete grade3;
+                        return true;
+                }
+                break;
+
+        default:
+                return false;
         }
         return false;
 }
@@ -69,23 +100,61 @@ void GradedItem::setCredits (int value)
         credits = value;
 }
 
-QString GradedItem::getGradeListTxt ()
+QString GradedItem::getGradeListTxt () const
 {
-        QString gradeListTxt;
+        QString gradeList;
 
-        for (int i = 0; i < this->gradeList.length (); i++) {
-                qDebug () << gradeListTxt;
-                gradeListTxt.append (QString::number (gradeList.at (i).getGrade ()));
+        if (grade1->getGrade () >= 0) {
+                gradeList.append (QString::number (grade1->getGrade ()));
+                if (grade2->getGrade () >= 0)
+                        gradeList.append (", ");
         }
-        return gradeListTxt;
+        if (grade2->getGrade () >= 0) {
+                gradeList.append (QString::number (grade2->getGrade ()));
+                if (grade3->getGrade () >= 0)
+                        gradeList.append (", ");
+        }
+        if (grade3->getGrade () >= 0) {
+                gradeList.append (QString::number (grade3->getGrade ()));
+        }
+        return (gradeList.isEmpty () || gradeList.isNull ()) ? "" : gradeList;
 }
 
-QList<Grade> GradedItem::getGradeList () const
+float GradedItem::getLastGrade () const
 {
-        return gradeList;
+        if (grade1->getGrade () == 5.0f) {
+                if (grade2->getGrade () == 5.0f) {
+                        return grade3->getGrade ();
+                }
+        }
 }
 
-void GradedItem::setGradeList (const QList<Grade> &value)
+Grade GradedItem::getGrade1 () const
 {
-        gradeList = value;
+        return *grade1;
+}
+
+void GradedItem::setGrade1 (Grade value)
+{
+        *grade1 = value;
+}
+
+Grade GradedItem::getGrade2 () const
+{
+        return *grade2;
+}
+
+void GradedItem::setGrade2 (Grade value)
+{
+        *grade2 = value;
+}
+
+Grade GradedItem::getGrade3 () const
+{
+        return *grade3;
+}
+
+void GradedItem::setGrade3 (Grade value)
+{
+        *grade3 = value;
 }

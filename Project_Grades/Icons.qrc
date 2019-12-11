@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/">
+        <file>exit-512x512.png</file>
+        <file>minus-512x512.png</file>
+        <file>open-512x512.png</file>
+        <file>plus-512x512.png</file>
+        <file>Refresh-512x512.png</file>
+        <file>save-512x512.png</file>
+        <file>grades-512x512.png</file>
+    </qresource>
+</RCC>
