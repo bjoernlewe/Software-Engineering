@@ -23,6 +23,8 @@ MainWindow::MainWindow(QWidget *parent) :
                 constraint->append (4.0f);
                 constraint->append (5.0f);
 
+                defaultFilePath = "C:/Users/Bjoern_Lewe/Desktop/SE/saveData.csv";
+
                 lastRow = -1;
 
                 subjectList = new QList<Subject>();
@@ -52,6 +54,7 @@ MainWindow::MainWindow(QWidget *parent) :
                 columnLabels->append ("Credits");
                 ui->gradeTableOverview->setHorizontalHeaderLabels (*columnLabels);
 
+                this->showMaximized ();
 
                 ui->gradeTableOverview->model ();
                 this->update ();
@@ -100,6 +103,9 @@ void MainWindow::on_buttonToExamsDialog_clicked ()
         try {
                 qDebug () << "MainWindow::on_buttonToExamsDialog_clicked() called";
                 QDialog* examsDialog = new QDialog ();
+
+                QIcon gradeIcon (":/grades-512x512.png");
+                examsDialog->setWindowIcon (gradeIcon);
 
                 examsDialog->setWindowTitle ("Abschlussarbeit");
                 QGridLayout* grid = new QGridLayout ();
@@ -170,6 +176,7 @@ void MainWindow::on_buttonToExamsDialog_clicked ()
                                 }
                                 else{
                                         qDebug () << "Invalid Grade " + examArray.at (0) + " used.";
+                                        this->setStatusTip ("Invalid Grade " + examArray.at (0) + " used.");
                                 }
                         }
                         else {
@@ -180,6 +187,7 @@ void MainWindow::on_buttonToExamsDialog_clicked ()
                                         }
                                         else{
                                                 qDebug () << "Invalid Grade " + examArray.at (1) + " used.";
+                                                this->setStatusTip ("Invalid Grade " + examArray.at (1) + " used.");
                                         }
                                 }
                                 else {
@@ -189,6 +197,7 @@ void MainWindow::on_buttonToExamsDialog_clicked ()
                                                 }
                                                 else {
                                                         qDebug () << "Invalid Grade " + examArray.at (2) + " used.";
+                                                        this->setStatusTip ("Invalid Grade " + examArray.at (2) + " used.");
                                                 }
                                         }
                                 }
@@ -213,6 +222,7 @@ void MainWindow::on_buttonToExamsDialog_clicked ()
                                 }
                                 else {
                                         qDebug () << "Invalid Grade " + kollArray.at (0) + " used.";
+                                        this->setStatusTip ("Invalid Grade " + kollArray.at (0) + " used.");
                                 }
                         }
                         else {
@@ -223,6 +233,7 @@ void MainWindow::on_buttonToExamsDialog_clicked ()
                                         }
                                         else {
                                                 qDebug () << "Invalid Grade " + kollArray.at (1) + " used.";
+                                                this->setStatusTip ("Invalid Grade " + kollArray.at (1) + " used.");
                                         }
                                 }
                                 else {
@@ -232,6 +243,7 @@ void MainWindow::on_buttonToExamsDialog_clicked ()
                                                 }
                                                 else {
                                                         qDebug () << "Invalid Grade " + kollArray.at (2) + " used.";
+                                                        this->setStatusTip ("Invalid Grade " + kollArray.at (2) + " used.");
                                                 }
                                         }
                                 }
@@ -262,6 +274,9 @@ void MainWindow::on_actionAddNewSubject_triggered ()
         try {
                 qDebug () << "MainWindow::on_actionAddNewSubject_triggered() called";
                 QDialog* createNewDialog = new QDialog ();
+
+                createNewDialog->setWindowIcon (QIcon (":/plus-512x512.png"));
+
                 QGridLayout* grid = new QGridLayout ();
                 createNewDialog->setWindowTitle ("Neues Fach");
 
@@ -308,6 +323,7 @@ void MainWindow::on_actionAddNewSubject_triggered ()
                                 }
                                 else{
                                         qDebug () << "Invalid Grade " + gradeTxt + " used.";
+                                        this->setStatusTip ("Invalid Grade " + gradeTxt + " used.");
                                 }
                         }
                 });
@@ -356,7 +372,7 @@ void MainWindow::closeEvent (QCloseEvent *e)
         qDebug () << "MainWindow::closeEvent() called";
         e->ignore ();
         QMessageBox msgbox;
-
+        msgbox.setWindowIcon (QIcon (":/exit-512x512.png"));
         msgbox.setWindowTitle ("Exit?");
         msgbox.setText ("Möchtest du die Anwendung wirklich schließen?");
         msgbox.setTextFormat (Qt::TextFormat::AutoText);
@@ -401,7 +417,7 @@ void MainWindow::exitWindowSlot (QDialog* window)
 {
         qDebug () << "MainWindow::exitSlot() called";
         QMessageBox msgbox;
-
+        msgbox.setWindowIcon (QIcon (":/grades-512x512.png"));
         msgbox.setWindowTitle ("Änderungen verwerfen?");
         msgbox.setText ("Möchtest Sie die Änderungen wirklich verwerfen?");
         msgbox.setTextFormat (Qt::TextFormat::AutoText);
@@ -432,6 +448,8 @@ void MainWindow::on_gradeTableOverview_itemDoubleClicked (QTableWidgetItem *item
 
                 QDialog* detailedSubjectInfo = new QDialog ();
                 detailedSubjectInfo->setWindowTitle (subject->getName ());
+                detailedSubjectInfo->setWindowIcon (QIcon (":/grades-512x512.png"));
+
                 QGridLayout* grid = new QGridLayout ();
 
                 QLabel* semester = new QLabel ("Semester");
@@ -490,18 +508,21 @@ void MainWindow::on_gradeTableOverview_itemDoubleClicked (QTableWidgetItem *item
                                 }
                                 else{
                                         qDebug () << "Invalid Grade " + grade1Edit->text () + " used";
+                                        this->setStatusTip ("Invalid Grade " + grade1Edit->text () + " used");
                                 }
                                 if (checkConstraint (grade2Edit->text ().toFloat ())) {
                                         list.append (grade2Edit->text ());
                                 }
                                 else{
                                         qDebug () << "Invalid Grade " + grade2Edit->text () + " used";
+                                        this->setStatusTip ("Invalid Grade " + grade2Edit->text () + " used");
                                 }
                                 if (checkConstraint (grade3Edit->text ().toFloat ())) {
                                         list.append (grade3Edit->text ());
                                 }
                                 else{
                                         qDebug () << "Invalid Grade " + grade3Edit->text () + " used";
+                                        this->setStatusTip ("Invalid Grade " + grade3Edit->text () + " used");
                                 }
                                 replaceOrInsert (2, createStringList (list));
                         } catch (QString exception) {
@@ -517,18 +538,21 @@ void MainWindow::on_gradeTableOverview_itemDoubleClicked (QTableWidgetItem *item
                                 }
                                 else{
                                         qDebug () << "Invalid Grade " + grade1Edit->text () + " used";
+                                        this->setStatusTip ("Invalid Grade " + grade1Edit->text () + " used");
                                 }
                                 if (checkConstraint (grade2Edit->text ().toFloat ())) {
                                         list.append (grade2Edit->text ());
                                 }
                                 else{
                                         qDebug () << "Invalid Grade " + grade2Edit->text () + " used";
+                                        this->setStatusTip ("Invalid Grade " + grade2Edit->text () + " used");
                                 }
                                 if (checkConstraint (grade3Edit->text ().toFloat ())) {
                                         list.append (grade3Edit->text ());
                                 }
                                 else{
                                         qDebug () << "Invalid Grade " + grade3Edit->text () + " used";
+                                        this->setStatusTip ("Invalid Grade " + grade3Edit->text () + " used");
                                 }
                                 replaceOrInsert (2, createStringList (list));
                         } catch (QString exception) {
@@ -544,18 +568,21 @@ void MainWindow::on_gradeTableOverview_itemDoubleClicked (QTableWidgetItem *item
                                 }
                                 else{
                                         qDebug () << "Invalid Grade " + grade1Edit->text () + " used";
+                                        this->setStatusTip ("Invalid Grade " + grade1Edit->text () + " used");
                                 }
                                 if (checkConstraint (grade2Edit->text ().toFloat ())) {
                                         list.append (grade2Edit->text ());
                                 }
                                 else{
                                         qDebug () << "Invalid Grade " + grade2Edit->text () + " used";
+                                        this->setStatusTip ("Invalid Grade " + grade2Edit->text () + " used");
                                 }
                                 if (checkConstraint (grade3Edit->text ().toFloat ())) {
                                         list.append (grade3Edit->text ());
                                 }
                                 else{
                                         qDebug () << "Invalid Grade " + grade3Edit->text () + " used";
+                                        this->setStatusTip ("Invalid Grade " + grade3Edit->text () + " used");
                                 }
                                 replaceOrInsert (2, createStringList (list));
                         } catch (QString exception) {
@@ -651,7 +678,7 @@ void MainWindow::on_actionSave_as_triggered ()
 {
         qDebug () << "MainWindow::on_actionSave_as_triggered() called";
         if (subjectList->length () > 0) {
-                QString filename = QFileDialog::getOpenFileName (this, tr ("Speichern unter..."), "C:/Users/Bjoern_Lewe/Desktop/SE/saveData.csv");
+                QString filename = QFileDialog::getOpenFileName (this, tr ("Speichern unter..."), defaultFilePath);
                 if (!(filename.isNull () || filename.isEmpty ())) {
                         if (saveFile->open (QFile::OpenModeFlag::WriteOnly)) {
                                 qDebug () << saveFile->seek (0);
@@ -693,7 +720,7 @@ void MainWindow::on_actionSave_as_triggered ()
 void MainWindow::on_actionOpen_File_triggered ()
 {
         qDebug () << "MainWindow::on_actionOpen_File_triggered() called";
-        QString filename = QFileDialog::getOpenFileName (this, tr ("Datei öffnen"), "C:/Users/Bjoern_Lewe/Desktop/SE/saveData.csv");
+        QString filename = QFileDialog::getOpenFileName (this, tr ("Datei öffnen"), defaultFilePath);
         if (!(filename.isNull () || filename.isEmpty ())) {
                 this->saveFile = new QFile (filename);
                 if (saveFile->open (QFile::OpenModeFlag::ReadOnly)) {

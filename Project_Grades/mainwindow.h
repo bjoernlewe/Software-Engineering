@@ -67,6 +67,7 @@ void onUpdate ();
 private:
 void replaceOrInsert (int index, const QString &data);
 bool checkConstraint (float value);
+QString defaultFilePath;
 QLineEdit* changeToWarningColor (QLineEdit* edit);
 QList<float>* constraint;
 Ui::MainWindow *ui;
