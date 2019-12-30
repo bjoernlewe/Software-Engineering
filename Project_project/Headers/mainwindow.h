@@ -31,7 +31,7 @@ void on_insertProject_clicked ();
 void refresh ();
 
 public slots:
-void newInsert (int projID, const QString& projName, const QString& projBesc, const QString& projHinter, const QString& projAnspr, const QString& projStudent);
+void newInsert (int projID, const QString& projName, const QString& projBesc, const QString& projHinter, const QString& projAnspr, const QString& projStudent1, const QString& projStudent2, const QString& projStudent3);
 
 signals:
 void onUpdate ();

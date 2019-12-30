@@ -45,9 +45,9 @@ void MainWindow::setRole (const QString &value)
 
 void MainWindow::on_insertProject_clicked ()
 {
-        InsertProjectDialog dialog (this);
+        InsertProjectDialog dialog (this, dbInterface.getNames ("ansprechpartner"), dbInterface.getNames ("student"), dbInterface.getOrg ());
 
-        dialog.showMaximized ();
+//        dialog.showMaximized ();
         connect (&dialog, &InsertProjectDialog::insertNew, this, &MainWindow::newInsert);
         dialog.exec ();
 }
@@ -75,7 +75,7 @@ void MainWindow::refresh ()
         this->update ();
 }
 
-void MainWindow::newInsert (int projID, const QString &projName, const QString &projBesc, const QString &projHinter, const QString &projAnspr, const QString &projStudent)
+void MainWindow::newInsert (int projID, const QString &projName, const QString &projBesc, const QString &projHinter, const QString &projAnspr, const QString& projStudent1, const QString& projStudent2, const QString& projStudent3)
 {
         qDebug () << "MainWindow::newInsert()";
         qDebug () << "Projekt ID: " << projID;
@@ -83,6 +83,7 @@ void MainWindow::newInsert (int projID, const QString &projName, const QString &
         qDebug () << "Projekt Beschreibung: " << projBesc;
         qDebug () << "Projekt Hintergrund: " << projHinter;
         qDebug () << "Ansprechpartner: " << projAnspr;
-        qDebug () << "Studenten: " << projStudent;
-        dbInterface.newEntry (projID, projName, projBesc, projHinter, projAnspr, projStudent);
+        qDebug () << "Studenten: " << projStudent1 << ", " << projStudent2 << ", " << projStudent3;
+        dbInterface.newEntry (projID, projName, projBesc, projHinter, projAnspr, projStudent1, projStudent2, projStudent3);
+        emit onUpdate ();
 }

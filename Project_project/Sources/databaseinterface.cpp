@@ -12,20 +12,88 @@ DatabaseInterface::DatabaseInterface(QObject *parent) : QObject (parent)
         stuView = createView (model, "Studentenansicht");
 }
 
-void DatabaseInterface::newEntry (int projID, const QString &projName, const QString &projBesc, const QString &projHinter, const QString &projAnspr, const QString &projStudent)
+void DatabaseInterface::newEntry (int projID, const QString &projName, const QString &projBesc, const QString &projHinter, const QString &projAnspr, const QString& projStudent1, const QString& projStudent2, const QString& projStudent3)
 {
         qDebug () << "DatabaseInterface::newEntry ()";
+        QSqlQuery query1;
+
+        query1.prepare ("INSERT INTO projekt "
+                "(proID,orgID,gruID,proName,proBesc,proHin,proStatus) "
+                "VALUES (:projID, NULL, NULL,:projName,:projBesc, :projHinter,0)");
+        query1.bindValue (":projID", projID);
+        query1.bindValue (":projName", projName);
+        query1.bindValue (":projBesc", projBesc);
+        query1.bindValue (":projHinter", projHinter);
+        query1.exec ();
+
+        qDebug () << "Anspechpartner: " << projAnspr;
+        qDebug () << "Student 1: " << projStudent1;
+        qDebug () << "Student 2: " << projStudent2;
+        qDebug () << "Student 3: " << projStudent3;
+
+//        QSqlQuery query2;
+//        query2.prepare ("");
+//        query2.bindValue (":ansID", "");
+//        query2.bindValue (":ansprech", projAnspr);
+
+        db.rollback ();
+}
+
+QStringList *DatabaseInterface::getNames (QString tablename)
+{
+        qDebug () << "DatabaseInterface::getNames(" << tablename << ")";
+        if (tablename.isNull () || tablename.isEmpty ()) {
+                throw QString ("DatabaseInterface::getNames : No tablename given");
+        }
+
         QSqlQuery query;
 
-        query.prepare ("INSERT INTO project "
-                "(proID,orgID,gruID,proName,proBesc,proHin) "
-                "VALUES (:projID, NULL, NULL,:projName,:projBesc, :projHinter)");
-        query.bindValue (":projID", projID);
-        query.bindValue (":projName", projName);
-        query.bindValue (":projBesc", projBesc);
-        query.bindValue (":projHinter", projHinter);
-        query.exec ();
-        db.commit ();
+        if (tablename == "student") {
+                query.exec ("SELECT * FROM student ORDER BY 1 ASC");
+        }
+        else if (tablename == "ansprechpartner") {
+                query.exec ("SELECT * FROM ansprechpartner ORDER BY 1 ASC");
+        }
+        else {
+                throw QString ("DatabaseInterface::getNames : invalid table given");
+        }
+
+        QStringList* items = new QStringList ();
+        while (query.next ()) {
+                QString id;
+                QString foreign;
+                if (tablename == "student") {
+                        id = query.value ("studentID").toString ();
+                        foreign = query.value ("gruID").toString ();
+                }
+                else{
+                        id = query.value ("ansID").toString ();
+                        foreign = query.value ("orgID").toString ();
+                }
+                QString vorname = query.value ("vorname").toString ();
+                QString nachname = query.value ("nachname").toString ();
+                qDebug () << vorname << " " << nachname;
+                items->append (id + " " + foreign + " " + vorname + " " + nachname);
+        }
+        return items;
+}
+
+QStringList *DatabaseInterface::getOrg ()
+{
+        QSqlQuery query;
+
+        query.exec ("SELECT * FROM organisation ORDER BY 1 ASC");
+
+        QStringList* items = new QStringList ();
+
+        while (query.next ()) {
+                QString orgid = query.value ("orgID").toString ();
+                QString proforeign = query.value ("proID").toString ();
+                QString ansforeign = query.value ("ansID").toString ();
+                QString orgName = query.value ("orgName").toString ();
+                items->append (orgid + " " + proforeign + " " + ansforeign + " " + orgName);
+        }
+        return items;
 }
 
 void DatabaseInterface::refresh ()

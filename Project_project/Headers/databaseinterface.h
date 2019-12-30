@@ -19,7 +19,11 @@ Q_OBJECT
 public:
 explicit DatabaseInterface(QObject *parent = nullptr);
 
-void newEntry (int projID, const QString& projName, const QString& projBesc, const QString& projHinter, const QString& projAnspr, const QString& projStudent);
+void newEntry (int projID, const QString& projName, const QString& projBesc, const QString& projHinter, const QString& projAnspr, const QString& projStudent1, const QString& projStudent2, const QString& projStudent3);
+
+QStringList* getNames (QString tablename);
+
+QStringList* getOrg ();
 
 void refresh ();
 

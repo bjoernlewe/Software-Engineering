@@ -2,12 +2,11 @@
 --To read Sql Statement:
 --.read C:/Users/Bjoern_Lewe/QTProjects/Project_project/Sql/testCaseSelectStatement.sql
 
-.dump student
-.dump gruppe
-.dump projekt
-.dump organisation
-.dump ansprechpartner
-
+--.dump student
+--.dump gruppe
+--.dump projekt
+--.dump organisation
+--.dump ansprechpartner
 
 SELECT * FROM student
 NATURAL JOIN gruppe
