@@ -17,7 +17,6 @@ explicit InsertProjectDialog(QWidget *parent = nullptr, QStringList* ansprechpar
 ~InsertProjectDialog();
 
 private slots:
-void on_ProIDLineEdit_editingFinished ();
 
 void on_ProNameLineEdit_editingFinished ();
 
@@ -38,7 +37,7 @@ void on_StudentCombo3_currentIndexChanged (int index);
 void on_OrganisationCombo_currentIndexChanged (int index);
 
 signals:
-void insertNew (int projID, const QString& projName, const QString& projBesc, const QString& projHinter, const QString& projAnspr, const QString& projStudent1, const QString& projStudent2, const QString& projStudent3);
+void insertNew (const QString& projName, const QString& projBesc, const QString& projHinter, const QString& projAnspr, const QString& projStudent1, const QString& projStudent2, const QString& projStudent3);
 
 private:
 Ui::InsertProjectDialog *ui;

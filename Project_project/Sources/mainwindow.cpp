@@ -75,15 +75,14 @@ void MainWindow::refresh ()
         this->update ();
 }
 
-void MainWindow::newInsert (int projID, const QString &projName, const QString &projBesc, const QString &projHinter, const QString &projAnspr, const QString& projStudent1, const QString& projStudent2, const QString& projStudent3)
+void MainWindow::newInsert (const QString &projName, const QString &projBesc, const QString &projHinter, const QString &projAnspr, const QString& projStudent1, const QString& projStudent2, const QString& projStudent3)
 {
         qDebug () << "MainWindow::newInsert()";
-        qDebug () << "Projekt ID: " << projID;
         qDebug () << "Projektname: " << projName;
         qDebug () << "Projekt Beschreibung: " << projBesc;
         qDebug () << "Projekt Hintergrund: " << projHinter;
         qDebug () << "Ansprechpartner: " << projAnspr;
         qDebug () << "Studenten: " << projStudent1 << ", " << projStudent2 << ", " << projStudent3;
-        dbInterface.newEntry (projID, projName, projBesc, projHinter, projAnspr, projStudent1, projStudent2, projStudent3);
+        dbInterface.newEntry (projName, projBesc, projHinter, projAnspr, projStudent1, projStudent2, projStudent3);
         emit onUpdate ();
 }

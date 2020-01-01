@@ -53,13 +53,6 @@ InsertProjectDialog::~InsertProjectDialog()
         delete ui;
 }
 
-void InsertProjectDialog::on_ProIDLineEdit_editingFinished ()
-{
-        if (!(ui->ProIDLineEdit->text ().isNull () || ui->ProIDLineEdit->text ().isEmpty ())) {
-                this->sendRequestFlag = true;
-        }
-}
-
 void InsertProjectDialog::on_ProNameLineEdit_editingFinished ()
 {
         if (!(ui->ProNameLineEdit->text ().isNull () || ui->ProNameLineEdit->text ().isEmpty ())) {
@@ -83,14 +76,22 @@ void InsertProjectDialog::on_HintergrundLineEdit_editingFinished ()
 
 void InsertProjectDialog::on_buttonBox_accepted ()
 {
-        qDebug () << "void InsertProjectDialog::on_buttonBox_accepted ()";
+        qDebug () << "InsertProjectDialog::on_buttonBox_accepted ()";
         if (this->sendRequestFlag) {
-                emit insertNew (ui->ProIDLineEdit->text ().toInt (), ui->ProNameLineEdit->text (),
-                                ui->BeschreibungLineEdit->text (), ui->HintergrundLineEdit->text (),
-                                ansprechpartner->at (ui->AnsprechpartnerCombo->currentIndex () - 1),
-                                studenten->at (ui->StudentCombo1->currentIndex ()),
-                                studenten->at (ui->StudentCombo2->currentIndex ()),
-                                studenten->at (ui->StudentCombo3->currentIndex ()));
+                qDebug () << ui->ProNameLineEdit->text ();
+                qDebug () << ui->BeschreibungLineEdit->text ();
+                qDebug () << ui->HintergrundLineEdit->text ();
+                qDebug () << ((ui->AnsprechpartnerCombo->currentIndex () - 1 <= 0) ? "" : ansprechpartner->at (ui->AnsprechpartnerCombo->currentIndex () - 1));
+                qDebug () << ((ui->StudentCombo1->currentIndex () <= 0) ? "" : studenten->at (ui->StudentCombo1->currentIndex () - 1));
+                qDebug () << ((ui->StudentCombo2->currentIndex () <= 0) ? "" : studenten->at (ui->StudentCombo2->currentIndex () - 1));
+                qDebug () << ((ui->StudentCombo3->currentIndex () <= 0) ? "" : studenten->at (ui->StudentCombo3->currentIndex () - 1));
+                emit insertNew (ui->ProNameLineEdit->text (),
+                                ui->BeschreibungLineEdit->text (),
+                                ui->HintergrundLineEdit->text (),
+                                ui->AnsprechpartnerCombo->currentIndex () <= 0 ? "" : ansprechpartner->at (ui->AnsprechpartnerCombo->currentIndex () - 1),
+                                ui->StudentCombo1->currentIndex () <= 0 ? "" : studenten->at (ui->StudentCombo1->currentIndex () - 1),
+                                ui->StudentCombo2->currentIndex () <= 0 ? "" : studenten->at (ui->StudentCombo2->currentIndex () - 1),
+                                ui->StudentCombo3->currentIndex () <= 0 ? "" : studenten->at (ui->StudentCombo3->currentIndex () - 1));
         }
 }
 
