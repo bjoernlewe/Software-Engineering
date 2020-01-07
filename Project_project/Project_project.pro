@@ -21,27 +21,36 @@ SOURCES += \
     Sources/databaseinterface.cpp \
     Sources/gruppe.cpp \
     Sources/insertprojectdialog.cpp \
+    Sources/loginscreen.cpp \
     Sources/main.cpp \
     Sources/mainwindow.cpp \
     Sources/organisation.cpp \
     Sources/person.cpp \
     Sources/projekt.cpp \
+    Sources/singinscreen.cpp \
     Sources/student.cpp
 
 HEADERS += \
+    Forms/loginscreen.h \
+    Forms/projekttree.h \
+    Forms/singinscreen.h \
     Headers/ansprechpartner.h \
     Headers/databaseinterface.h \
     Headers/gruppe.h \
     Headers/insertprojectdialog.h \
+    Headers/loginscreen.h \
     Headers/mainwindow.h \
     Headers/organisation.h \
     Headers/person.h \
     Headers/projekt.h \
+    Headers/singinscreen.h \
     Headers/student.h
 
 FORMS += \
     Forms/insertprojectdialog.ui \
+    Forms/loginscreen.ui \
     Forms/mainwindow.ui \
+    Forms/singinscreen.ui \
     Forms/vertikalerTestDialog.ui
 
 # Default rules for deployment.
