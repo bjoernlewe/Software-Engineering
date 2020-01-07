@@ -7,8 +7,7 @@
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow;
-               class InsertProjectDialog;
-               class LoginScreen; }
+               class InsertProjectDialog; }
 QT_END_NAMESPACE
 
 class MainWindow : public QMainWindow
@@ -22,17 +21,26 @@ MainWindow(QWidget *parent = nullptr);
 QString getRole () const;
 void setRole (const QString &value);
 
+private slots:
+void on_actionStudent_triggered ();
+
+void on_actionDozent_triggered ();
+
+void on_insertProject_clicked ();
+
+void refresh ();
+
+public slots:
+void newInsert (const QString& projName, const QString& projBesc, const QString& projHinter, const QString& projAnspr, const QString& projStudent1, const QString& projStudent2, const QString& projStudent3);
+
 signals:
 void onUpdate ();
-void backToLogin ();
 
 private:
 Ui::MainWindow *ui;
 
 protected:
 DatabaseInterface dbInterface;
-private slots:
-void on_actionLog_Out_triggered ();
-void on_actionGruppe_triggered ();
+QString role;
 };
 #endif // MAINWINDOW_H

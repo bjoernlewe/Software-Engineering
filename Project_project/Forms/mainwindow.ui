@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1116</width>
-    <height>859</height>
+    <width>800</width>
+    <height>600</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,281 +15,27 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout_2">
-    <item row="0" column="4">
-     <layout class="QGridLayout" name="ItemGrid" rowstretch="0,0,0,0,0,0,0,0" rowminimumheight="0,0,0,0,0,0,0,0">
-      <property name="sizeConstraint">
-       <enum>QLayout::SetMaximumSize</enum>
-      </property>
-      <property name="leftMargin">
-       <number>0</number>
-      </property>
-      <property name="topMargin">
-       <number>20</number>
-      </property>
-      <property name="rightMargin">
-       <number>0</number>
-      </property>
-      <property name="bottomMargin">
-       <number>0</number>
-      </property>
-      <property name="horizontalSpacing">
-       <number>0</number>
-      </property>
-      <property name="verticalSpacing">
-       <number>30</number>
-      </property>
-      <item row="0" column="2">
-       <widget class="QLineEdit" name="lineEdit_1">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="2">
-       <spacer name="verticalSpacer_2">
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
-        </property>
-        <property name="sizeType">
-         <enum>QSizePolicy::MinimumExpanding</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>20</width>
-          <height>170</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item row="0" column="0">
-       <widget class="QLabel" name="label_1">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>80</width>
-          <height>16777215</height>
-         </size>
-        </property>
+    <item row="0" column="0">
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="1" column="0">
+       <widget class="QPushButton" name="insertProject">
         <property name="text">
-         <string>Label 1</string>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="2">
-       <widget class="QComboBox" name="comboBox">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="2">
-       <widget class="QLineEdit" name="lineEdit_2">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
+         <string>Insert Project</string>
         </property>
        </widget>
       </item>
       <item row="2" column="0">
-       <widget class="QLabel" name="label_2">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>80</width>
-          <height>16777215</height>
-         </size>
-        </property>
+       <widget class="QPushButton" name="MarkToEdit">
         <property name="text">
-         <string>Label 2</string>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="0">
-       <widget class="QLabel" name="label_3">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>80</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>Label 3</string>
-        </property>
-       </widget>
-      </item>
-      <item row="6" column="2">
-       <spacer name="verticalSpacer">
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
-        </property>
-        <property name="sizeType">
-         <enum>QSizePolicy::Fixed</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>20</width>
-          <height>230</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item row="3" column="2">
-       <spacer name="verticalSpacer_3">
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>20</width>
-          <height>80</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-     </layout>
-    </item>
-    <item row="0" column="0">
-     <layout class="QGridLayout" name="MenuGrid">
-      <property name="sizeConstraint">
-       <enum>QLayout::SetMaximumSize</enum>
-      </property>
-      <property name="rightMargin">
-       <number>0</number>
-      </property>
-      <item row="1" column="0">
-       <widget class="QListWidget" name="ProjektList">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Maximum" vsizetype="Minimum">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>150</width>
-          <height>16777215</height>
-         </size>
+         <string>Mark to Edit</string>
         </property>
        </widget>
       </item>
       <item row="0" column="0">
-       <widget class="QLabel" name="ProjektLabel">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
+       <widget class="QStackedWidget" name="stackedWidget">
+        <property name="currentIndex">
+         <number>-1</number>
         </property>
-        <property name="maximumSize">
-         <size>
-          <width>150</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="autoFillBackground">
-         <bool>false</bool>
-        </property>
-        <property name="text">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#0000ff;&quot;&gt;Projekte&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QTreeWidget" name="ProjektTree">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>500</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="editTriggers">
-         <set>QAbstractItemView::CurrentChanged</set>
-        </property>
-        <property name="indentation">
-         <number>30</number>
-        </property>
-        <property name="uniformRowHeights">
-         <bool>false</bool>
-        </property>
-        <property name="animated">
-         <bool>true</bool>
-        </property>
-        <attribute name="headerVisible">
-         <bool>false</bool>
-        </attribute>
-        <column>
-         <property name="text">
-          <string>Projekt</string>
-         </property>
-        </column>
-        <item>
-         <property name="text">
-          <string>Projektname</string>
-         </property>
-         <item>
-          <property name="text">
-           <string>Beschreibung</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Hintergrund</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Status</string>
-          </property>
-         </item>
-        </item>
-        <item>
-         <property name="text">
-          <string>ProjektID</string>
-         </property>
-         <item>
-          <property name="text">
-           <string>GruppenID</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>OrganisationID</string>
-          </property>
-         </item>
-        </item>
        </widget>
       </item>
      </layout>
@@ -301,34 +47,28 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1116</width>
+     <width>800</width>
      <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuLogin">
     <property name="title">
-     <string>View</string>
+     <string>Login</string>
     </property>
-    <addaction name="actionLog_Out"/>
-   </widget>
-   <widget class="QMenu" name="menuNew">
-    <property name="title">
-     <string>New</string>
-    </property>
-    <addaction name="actionGruppe"/>
+    <addaction name="actionStudent"/>
+    <addaction name="actionDozent"/>
    </widget>
    <addaction name="menuLogin"/>
-   <addaction name="menuNew"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <action name="actionLog_Out">
+  <action name="actionStudent">
    <property name="text">
-    <string>Log Out</string>
+    <string>Student</string>
    </property>
   </action>
-  <action name="actionGruppe">
+  <action name="actionDozent">
    <property name="text">
-    <string>New Entry</string>
+    <string>Dozent</string>
    </property>
   </action>
  </widget>
