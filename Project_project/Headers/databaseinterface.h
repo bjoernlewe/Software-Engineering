@@ -12,6 +12,13 @@
 #include <QSqlResult>
 #include <QSqlRecord>
 #include <QSqlField>
+#include <QVector>
+
+#include "Headers/student.h"
+#include "Headers/ansprechpartner.h"
+#include "Headers/gruppe.h"
+#include "Headers/organisation.h"
+#include "Headers/projekt.h"
 
 class DatabaseInterface : public QObject
 {
@@ -20,6 +27,10 @@ public:
 explicit DatabaseInterface(QObject *parent = nullptr);
 
 void newEntry (const QString& projName, const QString& projBesc, const QString& projHinter, const QString& projAnspr, const QString& projStudent1, const QString& projStudent2, const QString& projStudent3);
+
+void loadTables ();
+
+void printAll ();
 
 QStringList* getNames (QString tablename);
 
@@ -44,6 +55,13 @@ QSqlDatabase db;
 QStandardItemModel* model;
 QTableView* profView;
 QTableView* stuView;
+
+QVector<Gruppe*>* gruppen;
+QVector<Student*>* studenten;
+QVector<Projekt*>* projekte;
+QVector<Ansprechpartner*>* ansprechpartner;
+QVector<Organisation*>* organisationen;
+
 bool createConnection ();
 void initializeModel (QStandardItemModel *model);
 void getValuesFromDatabase (QStandardItemModel* model);

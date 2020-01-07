@@ -13,7 +13,7 @@ class InsertProjectDialog : public QDialog
 Q_OBJECT
 
 public:
-explicit InsertProjectDialog(QWidget *parent = nullptr, QStringList* ansprechpartner = nullptr, QStringList* studenten = nullptr, QStringList* org = nullptr);
+explicit InsertProjectDialog(QWidget *parent = nullptr);
 ~InsertProjectDialog();
 
 private slots:

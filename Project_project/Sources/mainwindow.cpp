@@ -45,10 +45,10 @@ void MainWindow::setRole (const QString &value)
 
 void MainWindow::on_insertProject_clicked ()
 {
-        InsertProjectDialog dialog (this, dbInterface.getNames ("ansprechpartner"), dbInterface.getNames ("student"), dbInterface.getOrg ());
+        InsertProjectDialog dialog (this);
 
 //        dialog.showMaximized ();
-        connect (&dialog, &InsertProjectDialog::insertNew, this, &MainWindow::newInsert);
+//        connect (&dialog, &InsertProjectDialog::insertNew, this, &MainWindow::newInsert);
         dialog.exec ();
 }
 
@@ -83,6 +83,5 @@ void MainWindow::newInsert (const QString &projName, const QString &projBesc, co
         qDebug () << "Projekt Hintergrund: " << projHinter;
         qDebug () << "Ansprechpartner: " << projAnspr;
         qDebug () << "Studenten: " << projStudent1 << ", " << projStudent2 << ", " << projStudent3;
-        dbInterface.newEntry (projName, projBesc, projHinter, projAnspr, projStudent1, projStudent2, projStudent3);
         emit onUpdate ();
 }

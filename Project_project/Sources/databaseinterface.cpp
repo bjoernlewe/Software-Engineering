@@ -7,6 +7,13 @@ DatabaseInterface::DatabaseInterface(QObject *parent) : QObject (parent)
         if (!createConnection ()) {
                 throw QString ("Could not create a Connection");
         }
+        gruppen = new QVector<Gruppe*>();
+        studenten = new QVector<Student*>();
+        projekte = new QVector<Projekt*>();
+        ansprechpartner = new QVector<Ansprechpartner*>();
+        organisationen = new QVector<Organisation*>();
+
+
         model = new QStandardItemModel ();
         initializeModel (model);
         profView = createView (model, "Dozentenansicht");
@@ -14,110 +21,107 @@ DatabaseInterface::DatabaseInterface(QObject *parent) : QObject (parent)
         stuView = createView (model, "Studentenansicht");
 }
 
-void DatabaseInterface::newEntry (const QString &projName, const QString &projBesc, const QString &projHinter, const QString &projAnspr, const QString& projStudent1, const QString& projStudent2, const QString& projStudent3)
+void DatabaseInterface::loadTables ()
 {
-        qDebug () << "DatabaseInterface::newEntry ()";
+        studenten->clear ();
+        gruppen->clear ();
+        projekte->clear ();
+        organisationen->clear ();
+        ansprechpartner->clear ();
 
-        QSqlQuery queryProjektCreate;
-        int id = 0;
-        if (projStudent1 != "") {
-                id = projStudent1.split (" ").at (1).toInt ();
-                if (projStudent2 != "") {
-                        if (id == projStudent2.split (" ").at (1).toInt ()) {
-                                if (projStudent3 != "") {
-                                        if (id != projStudent3.split (" ").at (1).toInt ()) {
-                                                throw QString ("Diffrent gruIDs");
-                                        }
-                                }
-                        }
-                        else {
-                                throw QString ("Diffrent gruIDs");
-                        }
-                }
-        }
-
-
-        queryProjektCreate.prepare ("INSERT INTO projekt "
-                "(proID,orgID,gruID,proName,proBesc,proHin,proStatus) "
-                "VALUES (NULL, NULL, :gruID,:projName,:projBesc, :projHinter,0)");
-        queryProjektCreate.bindValue (":gruID", id);
-        queryProjektCreate.bindValue (":projName", projName);
-        queryProjektCreate.bindValue (":projBesc", projBesc);
-        queryProjektCreate.bindValue (":projHinter", projHinter);
-        queryProjektCreate.exec ();
-
-        qDebug () << "Anspechpartner: " << projAnspr;
-        qDebug () << "Student 1: " << projStudent1;
-        qDebug () << "Student 2: " << projStudent2;
-        qDebug () << "Student 3: " << projStudent3;
-}
-
-QStringList *DatabaseInterface::getNames (QString tablename)
-{
-        qDebug () << "DatabaseInterface::getNames(" << tablename << ")";
-        try {
-                if (tablename.isNull () || tablename.isEmpty ()) {
-                        throw QString ("DatabaseInterface::getNames : No tablename given");
-                }
-
-                QSqlQuery query;
-
-                if (tablename == "student") {
-                        query.exec ("SELECT * FROM student ORDER BY 1 ASC");
-                }
-                else if (tablename == "ansprechpartner") {
-                        query.exec ("SELECT * FROM ansprechpartner ORDER BY 1 ASC");
-                }
-                else {
-                        throw QString ("DatabaseInterface::getNames : invalid table given");
-                }
-
-                QStringList* items = new QStringList ();
-                while (query.next ()) {
-                        QString id;
-                        QString foreign;
-                        if (tablename == "student") {
-                                id = query.value ("studentID").toString ();
-                                foreign = query.value ("gruID").toString ();
-                        }
-                        else{
-                                id = query.value ("ansID").toString ();
-                                foreign = query.value ("orgID").toString ();
-                        }
-                        QString vorname = query.value ("vorname").toString ();
-                        QString nachname = query.value ("nachname").toString ();
-                        qDebug () << vorname << " " << nachname;
-                        items->append (id + " " + foreign + " " + vorname + " " + nachname);
-                }
-                if (db.lastError ().isValid ()) {
-                        qDebug () << db.lastError ();
-                }
-                return items;
-        } catch (QException e) {
-                qDebug () << "Error " << e.what ();
-                return nullptr;
-        }
-}
-
-QStringList *DatabaseInterface::getOrg ()
-{
         QSqlQuery query;
 
-        query.exec ("SELECT * FROM organisation ORDER BY 1 ASC");
-
-        QStringList* items = new QStringList ();
+        query.exec ("SELECT * FROM student;");
 
         while (query.next ()) {
-                QString orgid = query.value ("orgID").toString ();
-                QString proforeign = query.value ("proID").toString ();
-                QString ansforeign = query.value ("ansID").toString ();
-                QString orgName = query.value ("orgName").toString ();
-                items->append (orgid + " " + proforeign + " " + ansforeign + " " + orgName);
+                Student* newStudent = new Student (query.value ("studentID").toInt (), query.value ("vorname").toString (), query.value ("nachname").toString (), query.value ("gruID").toInt ());
+                studenten->append (newStudent);
         }
-        if (db.lastError ().isValid ()) {
-                qDebug () << db.lastError ();
+
+        if (query.lastError ().isValid ()) {
+                qDebug () << query.lastError ();
+                return;
         }
-        return items;
+
+        query.clear ();
+
+        query.exec ("SELECT * FROM gruppe");
+
+        while (query.next ()) {
+                Gruppe* newGroup = new Gruppe (query.value ("gruID").toInt (), query.value ("proID").toInt ());
+                gruppen->append (newGroup);
+        }
+
+        if (query.lastError ().isValid ()) {
+                qDebug () << query.lastError ();
+                return;
+        }
+
+        query.clear ();
+
+        query.exec ("SELECT * FROM projekt");
+
+        while (query.next ()) {
+                bool status = query.value ("proStatus") == 0 ? static_cast<bool>(nullptr) : query.value ("proStatus").toBool ();
+                Projekt* newProject = new Projekt (query.value ("proID").toInt (), query.value ("orgID").toInt (), query.value ("gruID").toInt (), query.value ("proName").toString (), query.value ("proBesc").toString (), query.value ("proHin").toString (), status);
+                projekte->append (newProject);
+        }
+
+        if (query.lastError ().isValid ()) {
+                qDebug () << query.lastError ();
+                return;
+        }
+
+        query.clear ();
+
+        query.exec ("SELECT * FROM organisation");
+
+        while (query.next ()) {
+                Organisation* newOrg = new Organisation (query.value ("orgID").toInt (), query.value ("proID").toInt (), query.value ("ansID").toInt (), query.value ("orgName").toString ());
+                organisationen->append (newOrg);
+        }
+
+        if (query.lastError ().isValid ()) {
+                qDebug () << query.lastError ();
+                return;
+        }
+
+        query.clear ();
+
+        query.exec ("SELECT * FROM ansprechpartner");
+
+        while (query.next ()) {
+                Ansprechpartner* newAnsprech = new Ansprechpartner (query.value ("ansID").toInt (), query.value ("vorname").toString (), query.value ("nachname").toString (), query.value ("orgID").toInt ());
+                ansprechpartner->append (newAnsprech);
+        }
+
+        if (query.lastError ().isValid ()) {
+                qDebug () << query.lastError ();
+                return;
+        }
+}
+
+void DatabaseInterface::printAll ()
+{
+        for (int i = 0; i < studenten->length (); i++) {
+                qDebug () << "Student(" << studenten->at (i)->getPrimaryKey () << "|" << studenten->at (i)->getForeignKey () << "|" << studenten->at (i)->getVorname () << "|" << studenten->at (i)->getNachname () << ")";
+        }
+
+        for (int i = 0; i < gruppen->length (); i++) {
+                qDebug () << "Gruppe(" << gruppen->at (i)->getPrimaryKey () << "|" << gruppen->at (i)->getForeignKey () << ")";
+        }
+
+        for (int i = 0; i < projekte->length (); i++) {
+                qDebug () << "Projekt(" << projekte->at (i)->getPrimaryKey () << "|" << projekte->at (i)->getForeignOrgKey () << "|" << projekte->at (i)->getForeignGruKey () << "|" << projekte->at (i)->getProjektName () << "|" << projekte->at (i)->getBeschreibung () << "|" << projekte->at (i)->getHintergrund () << "|" << projekte->at (i)->getStatus () << "|" << ")";
+        }
+
+        for (int i = 0; i < organisationen->length (); i++) {
+                qDebug () << "Organisation(" << organisationen->at (i)->getPrimaryKey () << "|" << organisationen->at (i)->getForeignAnsKey () << "|" << organisationen->at (i)->getForeignProKey () << "|" << organisationen->at (i)->getOrganisationName () << ")";
+        }
+
+        for (int i = 0; i < ansprechpartner->length (); i++) {
+                qDebug () << "Ansprechpartner(" << ansprechpartner->at (i)->getPrimaryKey () << "|" << ansprechpartner->at (i)->getForeignKey () << "|" << ansprechpartner->at (i)->getVorname () << "|" << ansprechpartner->at (i)->getNachname () << ")";
+        }
 }
 
 void DatabaseInterface::refresh ()
@@ -186,83 +190,14 @@ bool DatabaseInterface::createConnection ()
 
 void DatabaseInterface::initializeModel (QStandardItemModel *model)
 {
-        QStringList labelList;
-
-        labelList.append (QString ("ProjektID"));
-        labelList.append (QString ("Projektname"));
-        labelList.append (QString ("Projektbeschreibung"));
-        labelList.append (QString ("Projekthintergrund"));
-        labelList.append (QString ("Status"));
-        labelList.append (QString ("Ansprechpartner"));
-        labelList.append (QString ("Studenten"));
-
-        model->setHorizontalHeaderLabels (labelList);
-
         getValuesFromDatabase (model);
 
-
-        //Prints SQL Tables
-//        for (int i = 0; i < db.tables ().length (); i++) {
-//                auto returnValue = db.record (db.tables ().at (i));
-//                qDebug () << returnValue;
-//        }
+        loadTables ();
+        printAll ();
 }
 
 void DatabaseInterface::getValuesFromDatabase (QStandardItemModel* model)
 {
-        QString execString ("SELECT student.vorname, student.nachname,"
-                            "projekt.proID,projekt.proName, projekt.proBesc,projekt.proHin,projekt.proStatus,"
-                            "organisation.orgName,"
-                            "ansprechpartner.vorname,ansprechpartner.nachname "
-                            "FROM student NATURAL JOIN gruppe "
-                            "NATURAL JOIN projekt "
-                            "NATURAL JOIN organisation "
-                            "INNER JOIN ansprechpartner "
-                            "ON organisation.orgID = ansprechpartner.orgID;");
-
-        QSqlQuery query (execString);
-
-        if (query.lastError ().isValid ()) {
-                qDebug () << query.lastError ();
-        }
-
-        while (query.next ()) {
-                QList<QStandardItem*> items;
-                QString stuName = query.value ("student.vorname").toString ();
-                stuName += " " + query.value ("student.nachname").toString ();
-                QString proID = query.value ("proID").toString ();
-                QString proName = query.value ("proName").toString ();
-                QString besc = query.value ("proBesc").toString ();
-                QString hint = query.value ("proHin").toString ();
-                QString status = query.value ("proStatus").toString ();
-                QString orgName = query.value ("orgName").toString ();
-                QString ansName = query.value ("ansprechpartner.vorname").toString ();
-                ansName += " " + query.value ("ansprechpartner.nachname").toString ();
-
-                QStandardItem* proNameItem = new QStandardItem (proName);
-
-                QStandardItem* proBescItem = new QStandardItem (besc);
-
-                QStandardItem* proHinterItem = new QStandardItem (hint);
-
-                QStandardItem* proStatusItem = new QStandardItem (status);
-                proStatusItem->setCheckable (true);
-
-                QStandardItem* proAnsItem = new QStandardItem (ansName);
-
-                QStandardItem* proStuItem = new QStandardItem (stuName);
-
-                QStandardItem* id = new QStandardItem (proID);
-
-                items.append (id);
-                items.append (proNameItem);
-                items.append (proBescItem);
-                items.append (proHinterItem);
-                items.append (proStatusItem);
-                items.append (proAnsItem);
-                items.append (proStuItem);
-                model->insertRow (model->rowCount (), items);
-        }
 }
 
 QTableView *DatabaseInterface::createView (QStandardItemModel *model, const QString &title)

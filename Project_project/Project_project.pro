@@ -17,15 +17,27 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    Sources/ansprechpartner.cpp \
     Sources/databaseinterface.cpp \
+    Sources/gruppe.cpp \
     Sources/insertprojectdialog.cpp \
     Sources/main.cpp \
-    Sources/mainwindow.cpp
+    Sources/mainwindow.cpp \
+    Sources/organisation.cpp \
+    Sources/person.cpp \
+    Sources/projekt.cpp \
+    Sources/student.cpp
 
 HEADERS += \
+    Headers/ansprechpartner.h \
     Headers/databaseinterface.h \
+    Headers/gruppe.h \
     Headers/insertprojectdialog.h \
-    Headers/mainwindow.h
+    Headers/mainwindow.h \
+    Headers/organisation.h \
+    Headers/person.h \
+    Headers/projekt.h \
+    Headers/student.h
 
 FORMS += \
     Forms/insertprojectdialog.ui \
