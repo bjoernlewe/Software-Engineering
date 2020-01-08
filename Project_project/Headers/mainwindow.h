@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include "insertprojectdialog.h"
 #include "databaseinterface.h"
+#include "organisationscreen.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow;
@@ -34,5 +35,6 @@ DatabaseInterface dbInterface;
 private slots:
 void on_actionLog_Out_triggered ();
 void on_actionGruppe_triggered ();
+void on_actionOrganisation_triggered ();
 };
 #endif // MAINWINDOW_H

@@ -16,7 +16,7 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout_2">
     <item row="0" column="4">
-     <layout class="QGridLayout" name="ItemGrid" rowstretch="0,0,0,0,0,0,0,0" rowminimumheight="0,0,0,0,0,0,0,0">
+     <layout class="QGridLayout" name="ItemGrid" rowstretch="0,0,0,0,0,0,0" rowminimumheight="0,0,0,0,0,0,0">
       <property name="sizeConstraint">
        <enum>QLayout::SetMaximumSize</enum>
       </property>
@@ -296,6 +296,7 @@
     </item>
    </layout>
   </widget>
+  <widget class="QStatusBar" name="statusbar"/>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
@@ -309,6 +310,8 @@
     <property name="title">
      <string>View</string>
     </property>
+    <addaction name="actionOrganisation"/>
+    <addaction name="separator"/>
     <addaction name="actionLog_Out"/>
    </widget>
    <widget class="QMenu" name="menuNew">
@@ -320,7 +323,6 @@
    <addaction name="menuLogin"/>
    <addaction name="menuNew"/>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
   <action name="actionLog_Out">
    <property name="text">
     <string>Log Out</string>
@@ -329,6 +331,11 @@
   <action name="actionGruppe">
    <property name="text">
     <string>New Entry</string>
+   </property>
+  </action>
+  <action name="actionOrganisation">
+   <property name="text">
+    <string>Organisation</string>
    </property>
   </action>
  </widget>

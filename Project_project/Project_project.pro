@@ -17,7 +17,10 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    Sources/addansdialog.cpp \
+    Sources/addorgdialog.cpp \
     Sources/ansprechpartner.cpp \
+    Sources/ansprechverwaltung.cpp \
     Sources/databaseinterface.cpp \
     Sources/gruppe.cpp \
     Sources/insertprojectdialog.cpp \
@@ -25,31 +28,43 @@ SOURCES += \
     Sources/main.cpp \
     Sources/mainwindow.cpp \
     Sources/organisation.cpp \
+    Sources/organisationscreen.cpp \
     Sources/person.cpp \
     Sources/projekt.cpp \
     Sources/singinscreen.cpp \
-    Sources/student.cpp
+    Sources/student.cpp \
+    Sources/studentverwaltung.cpp \
+    Sources/verwaltung.cpp
 
 HEADERS += \
-    Forms/loginscreen.h \
-    Forms/projekttree.h \
-    Forms/singinscreen.h \
+    Forms/addansdialog.h \
+    Forms/addorgdialog.h \
+    Forms/organisationscreen.h \
+    Headers/addansdialog.h \
+    Headers/addorgdialog.h \
     Headers/ansprechpartner.h \
+    Headers/ansprechverwaltung.h \
     Headers/databaseinterface.h \
     Headers/gruppe.h \
     Headers/insertprojectdialog.h \
     Headers/loginscreen.h \
     Headers/mainwindow.h \
     Headers/organisation.h \
+    Headers/organisationscreen.h \
     Headers/person.h \
     Headers/projekt.h \
     Headers/singinscreen.h \
-    Headers/student.h
+    Headers/student.h \
+    Headers/studentverwaltung.h \
+    Headers/verwaltung.h
 
 FORMS += \
+    Forms/addansdialog.ui \
+    Forms/addorgdialog.ui \
     Forms/insertprojectdialog.ui \
     Forms/loginscreen.ui \
     Forms/mainwindow.ui \
+    Forms/organisationscreen.ui \
     Forms/singinscreen.ui \
     Forms/vertikalerTestDialog.ui
 
