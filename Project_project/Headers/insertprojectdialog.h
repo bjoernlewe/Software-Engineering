@@ -13,11 +13,24 @@ class InsertProjectDialog : public QDialog
 Q_OBJECT
 
 public:
-explicit InsertProjectDialog(QWidget *parent = nullptr);
+explicit InsertProjectDialog(QWidget *parent = nullptr, DatabaseInterface* db = nullptr);
 ~InsertProjectDialog();
 
+private slots:
+
+void on_orgCombo_currentIndexChanged (int index);
+
+void on_bescInput_selectionChanged ();
+
+void on_hintInput_selectionChanged ();
+
 private:
+DatabaseInterface* db;
 Ui::InsertProjectDialog *ui;
+void loadOrg ();
+void loadAns (int id);
+void loadStudenten ();
+void loadDozenten ();
 };
 
 #endif // INSERTPROJECTDIALOG_H

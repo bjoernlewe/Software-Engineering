@@ -5,10 +5,10 @@
 
 
 
-class AnsprechVerwaltung
+class DozentVerwaltung
 {
 public:
-AnsprechVerwaltung(int id, int verwaltung, const QString& username, const QString& password);
+DozentVerwaltung(int id, int verwaltung, const QString& vorname, const QString& nachname, const QString& password);
 
 int getPrimaryKey () const;
 void setPrimaryKey (int value);
@@ -16,16 +16,20 @@ void setPrimaryKey (int value);
 int getForeignKey () const;
 void setForeignKey (int value);
 
-QString getUserName () const;
-void setUserName (const QString &value);
-
 QString getPassword () const;
 void setPassword (const QString &value);
+
+QString getVorname () const;
+void setVorname (const QString &value);
+
+QString getNachname () const;
+void setNachname (const QString &value);
 
 private:
 int primaryKey;
 int foreignKey;
-QString username;
+QString vorname;
+QString nachname;
 QString password;
 };
 

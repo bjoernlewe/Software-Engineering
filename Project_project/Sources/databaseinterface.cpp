@@ -14,7 +14,7 @@ DatabaseInterface::DatabaseInterface(QObject *parent) : QObject (parent)
         organisationen = new QVector<Organisation*>();
         verwaltung = new QVector<Verwaltung*>();
         studentenverwaltung = new QVector<StudentVerwaltung*>();
-        ansprechVerwaltung = new QVector<AnsprechVerwaltung*>();
+        dozentenverwaltung = new QVector<DozentVerwaltung*>();
 
 
         model = new QStandardItemModel ();
@@ -22,6 +22,39 @@ DatabaseInterface::DatabaseInterface(QObject *parent) : QObject (parent)
         profView = createView (model, "Dozentenansicht");
         profView->setFont (QFont ("Times", 20, QFont::Bold));
         stuView = createView (model, "Studentenansicht");
+}
+
+void DatabaseInterface::signIn (const QString& vorname, const QString& nachname, const QString &password, const QString &typ)
+{
+        if (typ == "Student") {
+                StudentVerwaltung* SVerwaltung = new StudentVerwaltung (0, 0, vorname, nachname, password);
+                studentenverwaltung->append (SVerwaltung);
+                saveStudentenVerwaltung ();
+                loadStudentenVerwaltung ();
+                Verwaltung* newVer = new Verwaltung (0, getMaxID (studentenverwaltung), 0);
+                verwaltung->append (newVer);
+                saveVerwaltung ();
+                loadVerwaltung ();
+                studentenverwaltung->last ()->setForeignKey (getMaxID (verwaltung));
+                saveStudentenVerwaltung ();
+                loadStudentenVerwaltung ();
+        }
+        else if (typ == "Dozent") {
+                DozentVerwaltung* AVerwaltung = new DozentVerwaltung (0, 0, vorname, nachname, password);
+                dozentenverwaltung->append (AVerwaltung);
+                saveAnsprechVerwaltung ();
+                loadAnsprechVerwaltung ();
+                Verwaltung* newVer = new Verwaltung (0, 0, getMaxID (dozentenverwaltung));
+                verwaltung->append (newVer);
+                saveVerwaltung ();
+                loadVerwaltung ();
+                dozentenverwaltung->last ()->setForeignKey (getMaxID (verwaltung));
+                saveAnsprechVerwaltung ();
+                loadAnsprechVerwaltung ();
+        }
+        else{
+                throw QString ("DatabaseInterface::signIn(): no such type: " + typ);
+        }
 }
 
 void DatabaseInterface::loadTables ()
@@ -71,15 +104,15 @@ void DatabaseInterface::printAll ()
         }
 
         for (int i = 0; i < verwaltung->length (); i++) {
-                qDebug () << "(" << verwaltung->at (i)->getPrimaryKey () << "|" << verwaltung->at (i)->getForeignStuKey () << "|" << verwaltung->at (i)->getForeignAnsKey () << ")";
+                qDebug () << "Verwaltung(" << verwaltung->at (i)->getPrimaryKey () << "|" << verwaltung->at (i)->getForeignStuKey () << "|" << verwaltung->at (i)->getForeignAnsKey () << ")";
         }
 
-        for (int i = 0; i < ansprechVerwaltung->length (); i++) {
-                qDebug () << "(" << ansprechVerwaltung->at (i)->getPrimaryKey () << "|" << ansprechVerwaltung->at (i)->getForeignKey () << "|" << ansprechVerwaltung->at (i)->getUserName () << "|" << ansprechVerwaltung->at (i)->getPassword () << ")";
+        for (int i = 0; i < dozentenverwaltung->length (); i++) {
+                qDebug () << "DozentVerwaltung(" << dozentenverwaltung->at (i)->getPrimaryKey () << "|" << dozentenverwaltung->at (i)->getForeignKey () << "|" << dozentenverwaltung->at (i)->getVorname () << "|" << dozentenverwaltung->at (i)->getNachname () << "|" << dozentenverwaltung->at (i)->getPassword () << ")";
         }
 
         for (int i = 0; i < studentenverwaltung->length (); i++) {
-                qDebug () << "(" << studentenverwaltung->at (i)->getPrimaryKey () << "|" << studentenverwaltung->at (i)->getForeignKey () << "|" << studentenverwaltung->at (i)->getUserName () << "|" << studentenverwaltung->at (i)->getPassword () << ")";
+                qDebug () << "StudentVerwaltung(" << studentenverwaltung->at (i)->getPrimaryKey () << "|" << studentenverwaltung->at (i)->getForeignKey () << "|" << studentenverwaltung->at (i)->getVorname () << "|" << studentenverwaltung->at (i)->getNachname () << "|" << studentenverwaltung->at (i)->getPassword () << ")";
         }
 }
 
@@ -256,7 +289,7 @@ void DatabaseInterface::loadStudentenVerwaltung ()
         query.exec ("SELECT * FROM studentVerwaltung");
 
         while (query.next ()) {
-                StudentVerwaltung* newSVerwaltung = new StudentVerwaltung (query.value ("sVerwaltungID").toInt (), query.value ("verwaltungID").toInt (), query.value ("userName").toString (), query.value ("passwort").toString ());
+                StudentVerwaltung* newSVerwaltung = new StudentVerwaltung (query.value ("sVerwaltungID").toInt (), query.value ("verwaltungID").toInt (), query.value ("vorname").toString (), query.value ("nachname").toString (), query.value ("passwort").toString ());
                 studentenverwaltung->append (newSVerwaltung);
         }
 
@@ -270,18 +303,18 @@ void DatabaseInterface::loadStudentenVerwaltung ()
 
 void DatabaseInterface::loadAnsprechVerwaltung ()
 {
-        ansprechVerwaltung->clear ();
+        dozentenverwaltung->clear ();
 
         QSqlQuery query;
 
         query.exec ("SELECT * FROM ansprechVerwaltung");
 
         while (query.next ()) {
-                AnsprechVerwaltung* newAVerwaltung = new AnsprechVerwaltung (query.value ("aVerwaltungID").toInt (), query.value ("verwaltungID").toInt (), query.value ("userName").toString (), query.value ("passwort").toString ());
-                ansprechVerwaltung->append (newAVerwaltung);
+                DozentVerwaltung* newAVerwaltung = new DozentVerwaltung (query.value ("aVerwaltungID").toInt (), query.value ("verwaltungID").toInt (), query.value ("vorname").toString (), query.value ("nachname").toString (), query.value ("passwort").toString ());
+                dozentenverwaltung->append (newAVerwaltung);
         }
 
-        ansVerwaltungOriginalSize = ansprechVerwaltung->length ();
+        ansVerwaltungOriginalSize = dozentenverwaltung->length ();
 
         if (query.lastError ().isValid ()) {
                 qDebug () << "loadAnsprechVerwaltung: " << query.lastError ();
@@ -454,11 +487,12 @@ void DatabaseInterface::saveVerwaltung ()
 void DatabaseInterface::saveStudentenVerwaltung ()
 {
         QSqlQuery query;
-        QString statement = "INSERT INTO studentVerwaltung (sVerwaltungID,verwaltungID,userName,passwort)"
-                            "VALUES (:sVerwaltungID,:verwaltungID,:userName,:passwort)"
+        QString statement = "INSERT INTO studentVerwaltung (sVerwaltungID,verwaltungID,vorname,nachname,passwort)"
+                            "VALUES (:sVerwaltungID,:verwaltungID,:vorname,:nachname,:passwort)"
                             "ON CONFLICT(sVerwaltungID) DO UPDATE SET "
                             "verwaltungID = excluded.verwaltungID, "
-                            "userName = excluded.userName, "
+                            "vorname = excluded.vorname, "
+                            "nachname = excluded.nachname, "
                             "passwort = excluded.passwort "
                             "WHERE sVerwaltungID = excluded.sVerwaltungID;";
 
@@ -466,7 +500,8 @@ void DatabaseInterface::saveStudentenVerwaltung ()
                 query.prepare (statement);
                 query.bindValue (":sVerwaltungID", studentenverwaltung->at (i)->getPrimaryKey () <= 0 ? getMaxID (studentenverwaltung) + 1 : studentenverwaltung->at (i)->getPrimaryKey ());
                 query.bindValue (":verwaltungID", studentenverwaltung->at (i)->getForeignKey ());
-                query.bindValue (":userName", studentenverwaltung->at (i)->getUserName ());
+                query.bindValue (":vorname", studentenverwaltung->at (i)->getVorname ());
+                query.bindValue (":nachname", studentenverwaltung->at (i)->getNachname ());
                 query.bindValue (":passwort", studentenverwaltung->at (i)->getPassword ());
                 query.exec ();
                 if (query.lastError ().isValid ()) {
@@ -480,20 +515,22 @@ void DatabaseInterface::saveStudentenVerwaltung ()
 void DatabaseInterface::saveAnsprechVerwaltung ()
 {
         QSqlQuery query;
-        QString statement = "INSERT INTO ansprechVerwaltung (aVerwaltungID,verwaltung,userName,passwort)"
-                            "VALUES (:aVerwaltungID,:verwaltungID,:userName,:passwort)"
+        QString statement = "INSERT INTO ansprechVerwaltung (aVerwaltungID,verwaltungID,vorname,nachname,passwort)"
+                            "VALUES (:aVerwaltungID,:verwaltungID,:vorname,:nachname,:passwort)"
                             "ON CONFLICT(aVerwaltungID) DO UPDATE SET "
                             "verwaltungID = excluded.verwaltungID, "
-                            "userName = excluded.userName, "
+                            "vorname = excluded.vorname, "
+                            "nachname = excluded.nachname, "
                             "passwort = excluded.passwort "
-                            " WHERE aVerwaltungID = excluded.aVerwaltungID;";
+                            "WHERE aVerwaltungID = excluded.aVerwaltungID;";
 
-        for (int i = 0; i < ansprechVerwaltung->length (); i++) {
+        for (int i = 0; i < dozentenverwaltung->length (); i++) {
                 query.prepare (statement);
-                query.bindValue (":aVerwaltungID", ansprechVerwaltung->at (i)->getPrimaryKey () <= 0 ? getMaxID (ansprechVerwaltung) + 1 : ansprechVerwaltung->at (i)->getPrimaryKey ());
-                query.bindValue (":verwaltungID", ansprechVerwaltung->at (i)->getForeignKey ());
-                query.bindValue (":userName", ansprechVerwaltung->at (i)->getUserName ());
-                query.bindValue (":passwort", ansprechVerwaltung->at (i)->getPassword ());
+                query.bindValue (":aVerwaltungID", dozentenverwaltung->at (i)->getPrimaryKey () <= 0 ? getMaxID (dozentenverwaltung) + 1 : dozentenverwaltung->at (i)->getPrimaryKey ());
+                query.bindValue (":verwaltungID", dozentenverwaltung->at (i)->getForeignKey ());
+                query.bindValue (":vorname", dozentenverwaltung->at (i)->getVorname ());
+                query.bindValue (":nachname", dozentenverwaltung->at (i)->getNachname ());
+                query.bindValue (":passwort", dozentenverwaltung->at (i)->getPassword ());
                 query.exec ();
                 if (query.lastError ().isValid ()) {
                         qDebug () << "saveAnsprechverwaltung: " << i << query.lastError ();
@@ -588,9 +625,9 @@ int DatabaseInterface::getMaxID (QVector<Organisation *> *tmp)
         return buffer->getPrimaryKey ();
 }
 
-int DatabaseInterface::getMaxID (QVector<AnsprechVerwaltung *> *tmp)
+int DatabaseInterface::getMaxID (QVector<DozentVerwaltung *> *tmp)
 {
-        AnsprechVerwaltung* buffer = nullptr;
+        DozentVerwaltung* buffer = nullptr;
 
         for (int i = 0; i < tmp->length (); i++) {
                 if (buffer == nullptr) {
@@ -639,14 +676,14 @@ int DatabaseInterface::getMaxID (QVector<Verwaltung *> *tmp)
         return buffer->getPrimaryKey ();
 }
 
-QVector<AnsprechVerwaltung *> *DatabaseInterface::getAnsprechVerwaltung () const
+QVector<DozentVerwaltung *> *DatabaseInterface::getAnsprechVerwaltung () const
 {
-        return ansprechVerwaltung;
+        return dozentenverwaltung;
 }
 
-void DatabaseInterface::setAnsprechVerwaltung (QVector<AnsprechVerwaltung *> *value)
+void DatabaseInterface::setAnsprechVerwaltung (QVector<DozentVerwaltung *> *value)
 {
-        ansprechVerwaltung = value;
+        dozentenverwaltung = value;
 }
 
 QVector<StudentVerwaltung *> *DatabaseInterface::getStudentenverwaltung () const
@@ -721,7 +758,7 @@ void DatabaseInterface::setGruppen (QVector<Gruppe *> *value)
 
 bool DatabaseInterface::createConnection ()
 {
-        if (!db.isOpen ()) {
+        if (!(db.isOpen () || db.isValid ())) {
                 db = QSqlDatabase::addDatabase ("QSQLITE");
         }
 
@@ -746,7 +783,7 @@ bool DatabaseInterface::createConnection ()
 
 void DatabaseInterface::initializeModel (QStandardItemModel *model)
 {
-        getValuesFromDatabase (model);
+//        getValuesFromDatabase (model);
 
         loadTables ();
 

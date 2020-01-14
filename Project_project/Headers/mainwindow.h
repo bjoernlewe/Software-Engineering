@@ -17,11 +17,14 @@ class MainWindow : public QMainWindow
 Q_OBJECT
 
 public:
-MainWindow(QWidget *parent = nullptr);
+MainWindow(QWidget *parent = nullptr, DatabaseInterface* db = nullptr);
 ~MainWindow();
 
 QString getRole () const;
 void setRole (const QString &value);
+
+QString getType () const;
+void setType (const QString &value);
 
 signals:
 void onUpdate ();
@@ -29,9 +32,10 @@ void backToLogin ();
 
 private:
 Ui::MainWindow *ui;
+QString type;
 
 protected:
-DatabaseInterface dbInterface;
+DatabaseInterface* dbInterface;
 private slots:
 void on_actionLog_Out_triggered ();
 void on_actionGruppe_triggered ();

@@ -20,8 +20,8 @@ SOURCES += \
     Sources/addansdialog.cpp \
     Sources/addorgdialog.cpp \
     Sources/ansprechpartner.cpp \
-    Sources/ansprechverwaltung.cpp \
     Sources/databaseinterface.cpp \
+    Sources/dozentverwaltung.cpp \
     Sources/gruppe.cpp \
     Sources/insertprojectdialog.cpp \
     Sources/loginscreen.cpp \
@@ -31,7 +31,7 @@ SOURCES += \
     Sources/organisationscreen.cpp \
     Sources/person.cpp \
     Sources/projekt.cpp \
-    Sources/singinscreen.cpp \
+    Sources/signinscreen.cpp \
     Sources/student.cpp \
     Sources/studentverwaltung.cpp \
     Sources/verwaltung.cpp
@@ -43,8 +43,8 @@ HEADERS += \
     Headers/addansdialog.h \
     Headers/addorgdialog.h \
     Headers/ansprechpartner.h \
-    Headers/ansprechverwaltung.h \
     Headers/databaseinterface.h \
+    Headers/dozentverwaltung.h \
     Headers/gruppe.h \
     Headers/insertprojectdialog.h \
     Headers/loginscreen.h \
@@ -53,7 +53,7 @@ HEADERS += \
     Headers/organisationscreen.h \
     Headers/person.h \
     Headers/projekt.h \
-    Headers/singinscreen.h \
+    Headers/signinscreen.h \
     Headers/student.h \
     Headers/studentverwaltung.h \
     Headers/verwaltung.h
@@ -65,7 +65,7 @@ FORMS += \
     Forms/loginscreen.ui \
     Forms/mainwindow.ui \
     Forms/organisationscreen.ui \
-    Forms/singinscreen.ui \
+    Forms/signinscreen.ui \
     Forms/vertikalerTestDialog.ui
 
 # Default rules for deployment.

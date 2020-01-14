@@ -46,6 +46,9 @@
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
+        <property name="focusPolicy">
+         <enum>Qt::TabFocus</enum>
+        </property>
        </widget>
       </item>
       <item row="1" column="2">
@@ -91,6 +94,9 @@
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
+        <property name="focusPolicy">
+         <enum>Qt::TabFocus</enum>
+        </property>
        </widget>
       </item>
       <item row="2" column="2">
@@ -100,6 +106,9 @@
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::TabFocus</enum>
         </property>
        </widget>
       </item>
@@ -327,15 +336,24 @@
    <property name="text">
     <string>Log Out</string>
    </property>
+   <property name="shortcut">
+    <string>Q</string>
+   </property>
   </action>
   <action name="actionGruppe">
    <property name="text">
     <string>New Entry</string>
    </property>
+   <property name="shortcut">
+    <string>N</string>
+   </property>
   </action>
   <action name="actionOrganisation">
    <property name="text">
     <string>Organisation</string>
+   </property>
+   <property name="shortcut">
+    <string>O</string>
    </property>
   </action>
  </widget>

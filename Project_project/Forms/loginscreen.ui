@@ -121,7 +121,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="BenutzernameInput">
+      <widget class="QLineEdit" name="VornameInput">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
          <horstretch>0</horstretch>
@@ -153,7 +153,17 @@
         <set>Qt::AlignCenter</set>
        </property>
        <property name="placeholderText">
-        <string>Benutzername</string>
+        <string>Vorname</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="NachnameInput">
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+       <property name="placeholderText">
+        <string>Nachname</string>
        </property>
       </widget>
      </item>

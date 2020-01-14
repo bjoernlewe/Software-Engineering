@@ -1,22 +1,14 @@
 #include "Headers/studentverwaltung.h"
 
-StudentVerwaltung::StudentVerwaltung(int id, int verwaltung, const QString& username, const QString& password)
+StudentVerwaltung::StudentVerwaltung(int id, int verwaltung, const QString& vorname, const QString& nachname, const QString& password)
 {
         primaryKey = id;
         foreignKey = verwaltung;
-        this->username = username;
+        this->vorname = vorname;
+        this->nachname = nachname;
         this->password = password;
 }
 
-QString StudentVerwaltung::getUserName () const
-{
-        return username;
-}
-
-void StudentVerwaltung::setUserName (const QString &value)
-{
-        username = value;
-}
 
 QString StudentVerwaltung::getPassword () const
 {
@@ -46,4 +38,24 @@ int StudentVerwaltung::getForeignKey () const
 void StudentVerwaltung::setForeignKey (int value)
 {
         foreignKey = value;
+}
+
+QString StudentVerwaltung::getVorname () const
+{
+        return vorname;
+}
+
+void StudentVerwaltung::setVorname (const QString &value)
+{
+        vorname = value;
+}
+
+QString StudentVerwaltung::getNachname () const
+{
+        return nachname;
+}
+
+void StudentVerwaltung::setNachname (const QString &value)
+{
+        nachname = value;
 }

@@ -19,7 +19,7 @@
 #include "Headers/gruppe.h"
 #include "Headers/organisation.h"
 #include "Headers/projekt.h"
-#include "Headers/ansprechverwaltung.h"
+#include "Headers/dozentverwaltung.h"
 #include "Headers/studentverwaltung.h"
 #include "Headers/verwaltung.h"
 
@@ -28,6 +28,9 @@ class DatabaseInterface : public QObject
 Q_OBJECT
 public:
 explicit DatabaseInterface(QObject *parent = nullptr);
+
+
+void signIn (const QString& vorname, const QString& nachname, const QString& password, const QString& typ);
 
 void loadTables ();
 
@@ -57,7 +60,7 @@ int getMaxID (QVector<Student*>* tmp);
 int getMaxID (QVector<Gruppe*>* tmp);
 int getMaxID (QVector<Projekt*>* tmp);
 int getMaxID (QVector<Organisation*>* tmp);
-int getMaxID (QVector<AnsprechVerwaltung*>* tmp);
+int getMaxID (QVector<DozentVerwaltung*>* tmp);
 int getMaxID (QVector<StudentVerwaltung*>* tmp);
 int getMaxID (QVector<Verwaltung*>* tmp);
 
@@ -93,8 +96,8 @@ void setVerwaltung (QVector<Verwaltung *> *value);
 QVector<StudentVerwaltung *> *getStudentenverwaltung () const;
 void setStudentenverwaltung (QVector<StudentVerwaltung *> *value);
 
-QVector<AnsprechVerwaltung *> *getAnsprechVerwaltung () const;
-void setAnsprechVerwaltung (QVector<AnsprechVerwaltung *> *value);
+QVector<DozentVerwaltung *> *getAnsprechVerwaltung () const;
+void setAnsprechVerwaltung (QVector<DozentVerwaltung *> *value);
 
 private slots:
 void refreshData ();
@@ -121,7 +124,7 @@ QVector<Ansprechpartner*>* ansprechpartner;
 QVector<Organisation*>* organisationen;
 QVector<Verwaltung*>* verwaltung;
 QVector<StudentVerwaltung*>* studentenverwaltung;
-QVector<AnsprechVerwaltung*>* ansprechVerwaltung;
+QVector<DozentVerwaltung*>* dozentenverwaltung;
 
 bool createConnection ();
 void initializeModel (QStandardItemModel *model);

@@ -9,8 +9,9 @@ int main (int argc, char *argv[])
         try {
                 QApplication a (argc, argv);
                 qDebug () << "App path : " << qApp->applicationDirPath ();
-                MainWindow* m = new MainWindow ();
-                LoginScreen l (m);
+                DatabaseInterface* db = new DatabaseInterface ();
+                MainWindow* m = new MainWindow (nullptr, db);
+                LoginScreen l (m, db);
                 l.show ();
                 return a.exec ();
         } catch (QString exception) {

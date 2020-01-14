@@ -13,8 +13,8 @@ DROP TABLE ansprechpartner;
 
 
 CREATE TABLE verwaltung (verwaltungID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, studentID INTEGER, ansprechID INTEGER);
-CREATE TABLE studentVerwaltung (sVerwaltungID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, verwaltungID INTEGER, userName varchar(64) NOT NULL, passwort varchar(64) NOT NULL);
-CREATE TABLE ansprechVerwaltung (aVerwaltungID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, verwaltungID INTEGER, userName varchar(64) NOT NULL, passwort varchar(64) NOT NULL);
+CREATE TABLE studentVerwaltung (sVerwaltungID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, verwaltungID INTEGER, vorname varchar(64) NOT NULL, nachname varchar(64) NOT NULL, passwort varchar(64) NOT NULL);
+CREATE TABLE ansprechVerwaltung (aVerwaltungID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, verwaltungID INTEGER, vorname varchar(64) NOT NULL, nachname varchar(64) NOT NULL, passwort varchar(64) NOT NULL);
 
 
 CREATE TABLE student (studentID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,gruID INTEGER, vorname varchar(64), nachname varchar(64));

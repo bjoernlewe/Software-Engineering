@@ -8,9 +8,7 @@
 class StudentVerwaltung
 {
 public:
-StudentVerwaltung(int id, int verwaltung, const QString& username, const QString& password);
-QString getUserName () const;
-void setUserName (const QString &value);
+StudentVerwaltung(int id, int verwaltung, const QString& vorname, const QString& nachname, const QString& password);
 
 QString getPassword () const;
 void setPassword (const QString &value);
@@ -21,10 +19,17 @@ void setPrimaryKey (int value);
 int getForeignKey () const;
 void setForeignKey (int value);
 
+QString getVorname () const;
+void setVorname (const QString &value);
+
+QString getNachname () const;
+void setNachname (const QString &value);
+
 private:
 int primaryKey;
 int foreignKey;
-QString username;
+QString vorname;
+QString nachname;
 QString password;
 };
 
