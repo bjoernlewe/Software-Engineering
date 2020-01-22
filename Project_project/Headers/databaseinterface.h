@@ -7,12 +7,17 @@
 #include <QStandardItemModel>
 #include <QSqlError>
 #include <QSqlRelation>
-#include <QTableView>
+#include <QAbstractItemView>
 #include <QSqlQuery>
 #include <QSqlResult>
 #include <QSqlRecord>
 #include <QSqlField>
 #include <QVector>
+#include <QStringListModel>
+#include <QTreeView>
+#include <QListView>
+#include <QDataWidgetMapper>
+#include <QComboBox>
 
 #include "Headers/student.h"
 #include "Headers/ansprechpartner.h"
@@ -28,12 +33,8 @@ class DatabaseInterface : public QObject
 Q_OBJECT
 public:
 explicit DatabaseInterface(QObject *parent = nullptr);
-
-
 void signIn (const QString& vorname, const QString& nachname, const QString& password, const QString& typ);
-
 void loadTables ();
-
 void saveTables ();
 
 void loadGruppen ();
@@ -45,7 +46,6 @@ void loadVerwaltung ();
 void loadStudentenVerwaltung ();
 void loadAnsprechVerwaltung ();
 
-
 void saveGruppen ();
 void saveStudenten ();
 void saveProjekte ();
@@ -54,6 +54,9 @@ void saveOrganisation ();
 void saveVerwaltung ();
 void saveStudentenVerwaltung ();
 void saveAnsprechVerwaltung ();
+
+void removeOrgAt (int id);
+void removeAnsAt (int id);
 
 int getMaxID (QVector<Ansprechpartner*>* tmp);
 int getMaxID (QVector<Student*>* tmp);
@@ -64,16 +67,18 @@ int getMaxID (QVector<DozentVerwaltung*>* tmp);
 int getMaxID (QVector<StudentVerwaltung*>* tmp);
 int getMaxID (QVector<Verwaltung*>* tmp);
 
+void getStudentComboItems (QComboBox* box, const QModelIndex* index, int id);
+void getOrgComboItems (QComboBox* box, const QModelIndex* index, int id);
+void getAnsprechComboItems (QComboBox* box, const QModelIndex* index, int id);
+void getView (QListView* view, const QString& type, int id);
+void getItemView (QListView* view, const QString& type, int id);
+void getMappedWidget (QDataWidgetMapper* mapper, QList<QWidget*> widgets, const QString& type, int id);
+
+void changeIndex (const QModelIndex &index);
+
+QList<QMap<QString, QString>*>* getOneProject (int id);
+
 void printAll ();
-
-QStandardItemModel *getModel () const;
-void setModel (QStandardItemModel *value);
-
-QTableView *getProfView () const;
-void setProfView (QTableView *value);
-
-QTableView *getStuView () const;
-void setStuView (QTableView *value);
 
 QVector<Gruppe *> *getGruppen () const;
 void setGruppen (QVector<Gruppe *> *value);
@@ -99,14 +104,24 @@ void setStudentenverwaltung (QVector<StudentVerwaltung *> *value);
 QVector<DozentVerwaltung *> *getAnsprechVerwaltung () const;
 void setAnsprechVerwaltung (QVector<DozentVerwaltung *> *value);
 
-private slots:
-void refreshData ();
+QStandardItemModel *getModel () const;
+void setModel (QStandardItemModel *value);
+
+QModelIndex *getIndex () const;
+void setIndex (QModelIndex *value);
+
+QStringListModel *getListmodel () const;
+void setListmodel (QStringListModel *value);
+
+QMap<int, QString> getKEYS () const;
+void setKEYS (const QMap<int, QString> &value);
 
 private:
 QSqlDatabase db;
 QStandardItemModel* model;
-QTableView* profView;
-QTableView* stuView;
+QStringListModel* listmodel;
+QModelIndex* index;
+QMap<int, QString> KEYS;
 
 int gruppeOriginalSize;
 int studentenOriginalSize;
@@ -126,11 +141,12 @@ QVector<Verwaltung*>* verwaltung;
 QVector<StudentVerwaltung*>* studentenverwaltung;
 QVector<DozentVerwaltung*>* dozentenverwaltung;
 
+
 bool createConnection ();
-void initializeModel (QStandardItemModel *model);
-void getValuesFromDatabase (QStandardItemModel* model);
-QTableView *createView (QStandardItemModel *model, const QString &title = "");
-void createRT ();
+void initializeDatabase ();
+QList<int> getProjektID (const QString& type, int id);
+void getValuesFromDatabase (QStandardItemModel* model, const QString& type, int id);
+void getValuesFromDatabase (QStringListModel* model, const QString& type, int id);
 };
 
 #endif // DATABASEINTERFACE_H

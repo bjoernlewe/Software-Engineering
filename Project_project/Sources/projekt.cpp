@@ -1,11 +1,12 @@
 #include "Headers/projekt.h"
 
 
-Projekt::Projekt(int id, int organisation, int gruppe, const QString &name, const QString &beschreibung, const QString &hintergrund, bool status)
+Projekt::Projekt(int id, int organisation, int gruppe, int dozent, const QString &name, const QString &beschreibung, const QString &hintergrund, bool status)
 {
         this->primaryKey = id;
         this->foreignOrgKey = organisation;
         this->foreignGruKey = gruppe;
+        this->foreignDozKey = dozent;
         this->projektName = name;
         this->beschreibung = beschreibung;
         this->hintergrund = hintergrund;
@@ -72,12 +73,22 @@ void Projekt::setHintergrund (const QString &value)
         hintergrund = value;
 }
 
-bool Projekt::getStatus () const
+int Projekt::getStatus () const
 {
         return status;
 }
 
-void Projekt::setStatus (bool value)
+void Projekt::setStatus (int value)
 {
         status = value;
+}
+
+int Projekt::getForeignDozKey () const
+{
+        return foreignDozKey;
+}
+
+void Projekt::setForeignDozKey (int value)
+{
+        foreignDozKey = value;
 }

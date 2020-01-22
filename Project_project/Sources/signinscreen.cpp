@@ -1,5 +1,5 @@
 #include "Headers/signinscreen.h"
-#include "ui_singinscreen.h"
+#include "ui_signinscreen.h"
 
 SingInScreen::SingInScreen(QWidget *parent, DatabaseInterface* db) :
         QDialog (parent),

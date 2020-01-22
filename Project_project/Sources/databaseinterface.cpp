@@ -15,13 +15,11 @@ DatabaseInterface::DatabaseInterface(QObject *parent) : QObject (parent)
         verwaltung = new QVector<Verwaltung*>();
         studentenverwaltung = new QVector<StudentVerwaltung*>();
         dozentenverwaltung = new QVector<DozentVerwaltung*>();
+        index = new QModelIndex ();
+        setModel (nullptr);
+        setListmodel (nullptr);
 
-
-        model = new QStandardItemModel ();
-        initializeModel (model);
-        profView = createView (model, "Dozentenansicht");
-        profView->setFont (QFont ("Times", 20, QFont::Bold));
-        stuView = createView (model, "Studentenansicht");
+        initializeDatabase ();
 }
 
 void DatabaseInterface::signIn (const QString& vorname, const QString& nachname, const QString &password, const QString &typ)
@@ -84,72 +82,49 @@ void DatabaseInterface::saveTables ()
 void DatabaseInterface::printAll ()
 {
         for (int i = 0; i < studenten->length (); i++) {
-                qDebug () << "Student(" << studenten->at (i)->getPrimaryKey () << "|" << studenten->at (i)->getForeignKey () << "|" << studenten->at (i)->getVorname () << "|" << studenten->at (i)->getNachname () << ")";
+                qDebug () << "Student(studentID: " << studenten->at (i)->getPrimaryKey () << "| gruID: " << studenten->at (i)->getForeignKey () << "|" << studenten->at (i)->getVorname () << "|" << studenten->at (i)->getNachname () << ")";
         }
 
         for (int i = 0; i < gruppen->length (); i++) {
-                qDebug () << "Gruppe(" << gruppen->at (i)->getPrimaryKey () << "|" << gruppen->at (i)->getForeignKey () << ")";
+                qDebug () << "Gruppe(gruID: " << gruppen->at (i)->getPrimaryKey () << "| proID: " << gruppen->at (i)->getForeignKey () << ")";
         }
 
         for (int i = 0; i < projekte->length (); i++) {
-                qDebug () << "Projekt(" << projekte->at (i)->getPrimaryKey () << "|" << projekte->at (i)->getForeignOrgKey () << "|" << projekte->at (i)->getForeignGruKey () << "|" << projekte->at (i)->getProjektName () << "|" << projekte->at (i)->getBeschreibung () << "|" << projekte->at (i)->getHintergrund () << "|" << projekte->at (i)->getStatus () << "|" << ")";
+                qDebug () << "Projekt(proID: " << projekte->at (i)->getPrimaryKey () << "| orgID: " << projekte->at (i)->getForeignOrgKey () << "| gruID: " << projekte->at (i)->getForeignGruKey () << "| dozentID: " << projekte->at (i)->getForeignDozKey () << "|" << projekte->at (i)->getProjektName () << "|" << projekte->at (i)->getBeschreibung () << "|" << projekte->at (i)->getHintergrund () << "|" << projekte->at (i)->getStatus () << ")";
         }
 
         for (int i = 0; i < organisationen->length (); i++) {
-                qDebug () << "Organisation(" << organisationen->at (i)->getPrimaryKey () << "|" << organisationen->at (i)->getForeignAnsKey () << "|" << organisationen->at (i)->getForeignProKey () << "|" << organisationen->at (i)->getOrganisationName () << ")";
+                qDebug () << "Organisation( orgID: " << organisationen->at (i)->getPrimaryKey () << "| ansID: " << organisationen->at (i)->getForeignAnsKey () << "| proID: " << organisationen->at (i)->getForeignProKey () << "|" << organisationen->at (i)->getOrganisationName () << ")";
         }
 
         for (int i = 0; i < ansprechpartner->length (); i++) {
-                qDebug () << "Ansprechpartner(" << ansprechpartner->at (i)->getPrimaryKey () << "|" << ansprechpartner->at (i)->getForeignKey () << "|" << ansprechpartner->at (i)->getVorname () << "|" << ansprechpartner->at (i)->getNachname () << ")";
+                qDebug () << "Ansprechpartner( ansID: " << ansprechpartner->at (i)->getPrimaryKey () << "| orgID: " << ansprechpartner->at (i)->getForeignKey () << "|" << ansprechpartner->at (i)->getVorname () << "|" << ansprechpartner->at (i)->getNachname () << ")";
         }
 
         for (int i = 0; i < verwaltung->length (); i++) {
-                qDebug () << "Verwaltung(" << verwaltung->at (i)->getPrimaryKey () << "|" << verwaltung->at (i)->getForeignStuKey () << "|" << verwaltung->at (i)->getForeignAnsKey () << ")";
+                qDebug () << "Verwaltung( verwaltungID: " << verwaltung->at (i)->getPrimaryKey () << "| sVerwaltungID: " << verwaltung->at (i)->getForeignStuKey () << "| aVerwaltungID: " << verwaltung->at (i)->getForeignAnsKey () << ")";
         }
 
         for (int i = 0; i < dozentenverwaltung->length (); i++) {
-                qDebug () << "DozentVerwaltung(" << dozentenverwaltung->at (i)->getPrimaryKey () << "|" << dozentenverwaltung->at (i)->getForeignKey () << "|" << dozentenverwaltung->at (i)->getVorname () << "|" << dozentenverwaltung->at (i)->getNachname () << "|" << dozentenverwaltung->at (i)->getPassword () << ")";
+                qDebug () << "DozentVerwaltung( dozentID: " << dozentenverwaltung->at (i)->getPrimaryKey () << "| verwaltungID: " << dozentenverwaltung->at (i)->getForeignKey () << "|" << dozentenverwaltung->at (i)->getVorname () << "|" << dozentenverwaltung->at (i)->getNachname () << "|" << dozentenverwaltung->at (i)->getPassword () << ")";
         }
 
         for (int i = 0; i < studentenverwaltung->length (); i++) {
-                qDebug () << "StudentVerwaltung(" << studentenverwaltung->at (i)->getPrimaryKey () << "|" << studentenverwaltung->at (i)->getForeignKey () << "|" << studentenverwaltung->at (i)->getVorname () << "|" << studentenverwaltung->at (i)->getNachname () << "|" << studentenverwaltung->at (i)->getPassword () << ")";
+                qDebug () << "StudentVerwaltung( sVerwaltungID: " << studentenverwaltung->at (i)->getPrimaryKey () << "| verwaltungID: " << studentenverwaltung->at (i)->getForeignKey () << "|" << studentenverwaltung->at (i)->getVorname () << "|" << studentenverwaltung->at (i)->getNachname () << "|" << studentenverwaltung->at (i)->getPassword () << ")";
         }
-}
+        qDebug () << "========================================================";
 
-
-QStandardItemModel *DatabaseInterface::getModel () const
-{
-        return model;
-}
-
-void DatabaseInterface::setModel (QStandardItemModel *value)
-{
-        model = value;
-}
-
-QTableView *DatabaseInterface::getProfView () const
-{
-        return profView;
-}
-
-void DatabaseInterface::setProfView (QTableView *value)
-{
-        profView = value;
-}
-
-QTableView *DatabaseInterface::getStuView () const
-{
-        return stuView;
-}
-
-void DatabaseInterface::setStuView (QTableView *value)
-{
-        stuView = value;
-}
-
-void DatabaseInterface::refreshData ()
-{
-        getValuesFromDatabase (this->model);
+        for (int id = 1; id <= getMaxID (projekte); id++) {
+                QList<QMap<QString, QString>*>* projects = getOneProject (id);
+                for (int j = 0; j < projects->length (); j++) {
+                        QMapIterator<QString, QString>*iter = new QMapIterator<QString, QString>(*projects->at (j));
+                        qDebug () << "";
+                        while (iter->hasNext ()) {
+                                auto item = iter->next ();
+                                qDebug () << "(" << item.key () << ", " << item.value () << ")";
+                        }
+                }
+        }
 }
 
 void DatabaseInterface::loadGruppen ()
@@ -205,7 +180,7 @@ void DatabaseInterface::loadProjekte ()
 
         while (query.next ()) {
                 bool status = query.value ("proStatus") == 0 ? static_cast<bool>(nullptr) : query.value ("proStatus").toBool ();
-                Projekt* newProject = new Projekt (query.value ("proID").toInt (), query.value ("orgID").toInt (), query.value ("gruID").toInt (), query.value ("proName").toString (), query.value ("proBesc").toString (), query.value ("proHin").toString (), status);
+                Projekt* newProject = new Projekt (query.value ("proID").toInt (), query.value ("orgID").toInt (), query.value ("gruID").toInt (), query.value ("dozentID").toInt (), query.value ("proName").toString (), query.value ("proBesc").toString (), query.value ("proHin").toString (), status);
                 projekte->append (newProject);
         }
 
@@ -333,8 +308,8 @@ void DatabaseInterface::saveGruppen ()
 
         for (int i = 0; i < gruppen->length (); i++) {
                 query.prepare (statement);
-                query.bindValue ("gruID", gruppen->at (i)->getPrimaryKey () <= 0 ? getMaxID (gruppen) + 1 : gruppen->at (i)->getPrimaryKey ());
-                query.bindValue ("proID", gruppen->at (i)->getForeignKey ());
+                query.bindValue (":gruID", gruppen->at (i)->getPrimaryKey () <= 0 ? getMaxID (gruppen) + 1 : gruppen->at (i)->getPrimaryKey ());
+                query.bindValue (":proID", gruppen->at (i)->getForeignKey ());
                 query.exec ();
                 if (query.lastError ().isValid ()) {
                         qDebug () << "saveGruppen: " << i << query.lastError ();
@@ -375,11 +350,12 @@ void DatabaseInterface::saveProjekte ()
 {
         QSqlQuery query;
 
-        QString statement = "INSERT INTO projekt (proID,orgID,gruID,proName,proBesc,proHin,proStatus)"
-                            "VALUES (:proID,:orgID,:gruID,:proName,:proBesc,:proHin,:proStatus)"
+        QString statement = "INSERT INTO projekt (proID,orgID,gruID,dozentID,proName,proBesc,proHin,proStatus)"
+                            "VALUES (:proID,:orgID,:gruID,:dozentID,:proName,:proBesc,:proHin,:proStatus)"
                             "ON CONFLICT(proID) DO UPDATE SET "
                             "orgID = excluded.orgID, "
                             "gruID = excluded.gruID, "
+                            "dozentID = excluded.dozentID, "
                             "proName = excluded.proName, "
                             "proBesc = excluded.proBesc, "
                             "proHin = excluded.proHin, "
@@ -391,6 +367,7 @@ void DatabaseInterface::saveProjekte ()
                 query.bindValue (":proID", projekte->at (i)->getPrimaryKey () <= 0 ? getMaxID (projekte) + 1 : projekte->at (i)->getPrimaryKey ());
                 query.bindValue (":orgID", projekte->at (i)->getForeignOrgKey ());
                 query.bindValue (":gruID", projekte->at (i)->getForeignGruKey ());
+                query.bindValue (":dozentID", projekte->at (i)->getForeignDozKey ());
                 query.bindValue (":proName", projekte->at (i)->getProjektName ());
                 query.bindValue (":proBesc", projekte->at (i)->getBeschreibung ());
                 query.bindValue (":proHin", projekte->at (i)->getHintergrund ());
@@ -540,6 +517,34 @@ void DatabaseInterface::saveAnsprechVerwaltung ()
         }
 }
 
+void DatabaseInterface::removeOrgAt (int id)
+{
+        QSqlQuery query;
+
+        query.prepare ("DELETE FROM organisation WHERE orgID = :id");
+        query.bindValue (":id", id);
+        query.exec ();
+
+        if (query.lastError ().isValid ()) {
+                qDebug () << "removeOrgAt " << id << ": " << query.lastError ();
+                return;
+        }
+}
+
+void DatabaseInterface::removeAnsAt (int id)
+{
+        QSqlQuery query;
+
+        query.prepare ("DELETE FROM ansprechpartner WHERE ansID = :id");
+        query.bindValue (":id", id);
+        query.exec ();
+
+        if (query.lastError ().isValid ()) {
+                qDebug () << "removeAnsAt " << id << ": " << query.lastError ();
+                return;
+        }
+}
+
 int DatabaseInterface::getMaxID (QVector<Ansprechpartner *> *tmp)
 {
         Ansprechpartner* buffer = nullptr;
@@ -554,7 +559,10 @@ int DatabaseInterface::getMaxID (QVector<Ansprechpartner *> *tmp)
                         }
                 }
         }
-        return buffer->getPrimaryKey ();
+        int ret = 0;
+        if (buffer != nullptr)
+                ret = buffer->getPrimaryKey ();
+        return ret;
 }
 
 int DatabaseInterface::getMaxID (QVector<Student *> *tmp)
@@ -571,7 +579,10 @@ int DatabaseInterface::getMaxID (QVector<Student *> *tmp)
                         }
                 }
         }
-        return buffer->getPrimaryKey ();
+        int ret = 0;
+        if (buffer != nullptr)
+                ret = buffer->getPrimaryKey ();
+        return ret;
 }
 
 int DatabaseInterface::getMaxID (QVector<Gruppe *> *tmp)
@@ -588,7 +599,10 @@ int DatabaseInterface::getMaxID (QVector<Gruppe *> *tmp)
                         }
                 }
         }
-        return buffer->getPrimaryKey ();
+        int ret = 0;
+        if (buffer != nullptr)
+                ret = buffer->getPrimaryKey ();
+        return ret;
 }
 
 int DatabaseInterface::getMaxID (QVector<Projekt *> *tmp)
@@ -605,7 +619,10 @@ int DatabaseInterface::getMaxID (QVector<Projekt *> *tmp)
                         }
                 }
         }
-        return buffer->getPrimaryKey ();
+        int ret = 0;
+        if (buffer != nullptr)
+                ret = buffer->getPrimaryKey ();
+        return ret;
 }
 
 int DatabaseInterface::getMaxID (QVector<Organisation *> *tmp)
@@ -622,7 +639,10 @@ int DatabaseInterface::getMaxID (QVector<Organisation *> *tmp)
                         }
                 }
         }
-        return buffer->getPrimaryKey ();
+        int ret = 0;
+        if (buffer != nullptr)
+                ret = buffer->getPrimaryKey ();
+        return ret;
 }
 
 int DatabaseInterface::getMaxID (QVector<DozentVerwaltung *> *tmp)
@@ -639,7 +659,10 @@ int DatabaseInterface::getMaxID (QVector<DozentVerwaltung *> *tmp)
                         }
                 }
         }
-        return buffer->getPrimaryKey ();
+        int ret = 0;
+        if (buffer != nullptr)
+                ret = buffer->getPrimaryKey ();
+        return ret;
 }
 
 int DatabaseInterface::getMaxID (QVector<StudentVerwaltung *> *tmp)
@@ -656,7 +679,10 @@ int DatabaseInterface::getMaxID (QVector<StudentVerwaltung *> *tmp)
                         }
                 }
         }
-        return buffer->getPrimaryKey ();
+        int ret = 0;
+        if (buffer != nullptr)
+                ret = buffer->getPrimaryKey ();
+        return ret;
 }
 
 int DatabaseInterface::getMaxID (QVector<Verwaltung *> *tmp)
@@ -673,7 +699,10 @@ int DatabaseInterface::getMaxID (QVector<Verwaltung *> *tmp)
                         }
                 }
         }
-        return buffer->getPrimaryKey ();
+        int ret = 0;
+        if (buffer != nullptr)
+                ret = buffer->getPrimaryKey ();
+        return ret;
 }
 
 QVector<DozentVerwaltung *> *DatabaseInterface::getAnsprechVerwaltung () const
@@ -684,6 +713,55 @@ QVector<DozentVerwaltung *> *DatabaseInterface::getAnsprechVerwaltung () const
 void DatabaseInterface::setAnsprechVerwaltung (QVector<DozentVerwaltung *> *value)
 {
         dozentenverwaltung = value;
+}
+
+QStandardItemModel *DatabaseInterface::getModel () const
+{
+        return model;
+}
+
+void DatabaseInterface::setModel (QStandardItemModel *value)
+{
+        model = value;
+        if (model == nullptr)
+                model = new QStandardItemModel ();
+}
+
+QModelIndex *DatabaseInterface::getIndex () const
+{
+        return index;
+}
+
+void DatabaseInterface::setIndex (QModelIndex *value)
+{
+        index = value;
+}
+
+QStringListModel *DatabaseInterface::getListmodel () const
+{
+        return listmodel;
+}
+
+void DatabaseInterface::setListmodel (QStringListModel *value)
+{
+        listmodel = value;
+        if (listmodel == nullptr)
+                listmodel = new QStringListModel ();
+}
+
+QMap<int, QString> DatabaseInterface::getKEYS () const
+{
+        return KEYS;
+}
+
+void DatabaseInterface::setKEYS (const QMap<int, QString> &value)
+{
+        KEYS = value;
+}
+
+void DatabaseInterface::changeIndex (const QModelIndex &index)
+{
+        this->index = new QModelIndex (index);
 }
 
 QVector<StudentVerwaltung *> *DatabaseInterface::getStudentenverwaltung () const
@@ -781,26 +859,244 @@ bool DatabaseInterface::createConnection ()
         return true;
 }
 
-void DatabaseInterface::initializeModel (QStandardItemModel *model)
+void DatabaseInterface::initializeDatabase ()
 {
-//        getValuesFromDatabase (model);
-
         loadTables ();
-
+        KEYS.insert (1, "student.name");
+        KEYS.insert (2, "projekt.proStatus");
+        KEYS.insert (3, "projekt.proName");
+        KEYS.insert (4, "projekt.proHin");
+        KEYS.insert (5, "projekt.proBesc");
+        KEYS.insert (6, "organisation.orgName");
+        KEYS.insert (7, "ansprechpartner.vorname");
+        KEYS.insert (8, "ansprechpartner.nachname");
+        KEYS.insert (9, "ansprechVerwaltung.vorname");
+        KEYS.insert (10, "ansprechVerwaltung.nachname");
+        //testing
         printAll ();
 }
 
-void DatabaseInterface::getValuesFromDatabase (QStandardItemModel* model)
+QList<int> DatabaseInterface::getProjektID (const QString &type, int id)
 {
-        Q_UNUSED (model)
+        QSqlQuery query;
+
+        if (type == "Student") {
+                query.prepare ("SELECT projekt.proID FROM student "
+                        "INNER JOIN gruppe USING (gruID) "
+                        "INNER JOIN projekt USING (proID) "
+                        "INNER JOIN studentVerwaltung "
+                        "ON student.vorname = studentVerwaltung.vorname "
+                        "AND student.nachname = studentVerwaltung.nachname "
+                        "WHERE studentVerwaltung.sVerwaltungID = :id;");
+                query.bindValue (":id", id);
+                query.exec ();
+                QList<int> projects;
+                while (query.next ()) {
+                        projects << query.value ("projekt.proID").toInt ();
+                }
+                return projects;
+        }
+        else if (type == "Dozent") {
+                query.prepare ("SELECT projekt.proID FROM projekt "
+                        "INNER JOIN ansprechVerwaltung "
+                        "ON ansprechVerwaltung.aVerwaltungID = projekt.dozentID "
+                        "WHERE ansprechVerwaltung.aVerwaltungID = :id;");
+                query.bindValue (":id", id);
+                query.exec ();
+                QList<int>projects;
+                while (query.next ()) {
+                        projects << query.value ("projekt.proID").toInt ();
+                }
+                return projects;
+        }
+        else {
+                throw QString ("getProjektID(): No such type " + type);
+        }
 }
 
-QTableView *DatabaseInterface::createView (QStandardItemModel *model, const QString &title)
+void DatabaseInterface::getValuesFromDatabase (QStandardItemModel* model, const QString& type, int id)
 {
-        QTableView *view = new QTableView;
+        QList<int> allProIDs = getProjektID (type, id);
 
-        view->setModel (model);
-        view->setWindowTitle (title);
-        return view;
+        model->clear ();
+        for (int i = 0; i < allProIDs.length (); i++) {
+                QList<QMap<QString, QString>*>* projekts = getOneProject (allProIDs.at (i));
+                QStringList remember;
+                for (int j = 0; j < projekts->length (); j++) {
+                        QMapIterator<QString, QString>* iter = new QMapIterator<QString, QString>(*projekts->at (j));
+                        QString vorname;
+                        QString nachname;
+                        if (!(projekts->at (j)->key (this->index->data ().toString ()).isEmpty ()
+                              || projekts->at (j)->key (this->index->data ().toString ()).isNull ())) {
+                                while (iter->hasNext ()) {
+                                        auto item = iter->next ();
+                                        if (!remember.contains (item.key ())
+                                            || item.key () == "student.vorname"
+                                            || item.key () == "student.nachname") {
+                                                if (!remember.contains (item.key ()))
+                                                        remember << item.key ();
+                                                if (!(item.key () == "projekt.proStatus")) {
+                                                        if (!(item.key () == "student.vorname" || item.key () == "student.nachname")) {
+                                                                QStandardItem* newItem = new QStandardItem (item.key () + ":\t\t" + item.value ());
+                                                                model->appendRow (newItem);
+                                                        }
+                                                        else {
+                                                                if ((item.key () == "student.vorname")) {
+                                                                        vorname = item.value ();
+                                                                }
+                                                                else {
+                                                                        nachname = item.value ();
+                                                                }
+                                                                if (!(nachname.isNull () || nachname.isEmpty () || vorname.isNull () || vorname.isEmpty ())) {
+                                                                        QStandardItem* newItem = new QStandardItem ("student.name:\t\t" + vorname + ", " + nachname);
+                                                                        model->appendRow (newItem);
+                                                                }
+                                                        }
+                                                }
+                                                else{
+                                                        QString statusTxt;
+                                                        if (item.value () == "0") {
+                                                                statusTxt = "Abgelehnt";
+                                                        }
+                                                        else if (item.value () == "1") {
+                                                                statusTxt = "Angenommen";
+                                                        }
+                                                        else{
+                                                                statusTxt = "Zur Bearbeitung freigegeben";
+                                                        }
+                                                        QStandardItem* newItem = new QStandardItem (item.key () + ":\t\t" + statusTxt);
+                                                        model->appendRow (newItem);
+                                                }
+                                        }
+                                }
+                        }
+                }
+        }
+        model->sort (0, Qt::SortOrder::DescendingOrder);
 }
+
+void DatabaseInterface::getValuesFromDatabase (QStringListModel *model, const QString& type, int id)
+{
+        QStringList list;
+        QList<int> allProIDs = getProjektID (type, id);
+
+        for (int i = 0; i < allProIDs.length (); i++) {
+                QList<QMap<QString, QString>*>* projekts = getOneProject (allProIDs.at (i));
+                list << projekts->first ()->value ("projekt.proName");
+        }
+        model->setStringList (list);
+}
+
+void DatabaseInterface::getStudentComboItems (QComboBox* box, const QModelIndex* index, int id)
+{
+        QStringList item = index->data ().toString ().split (":");
+
+        box->clear ();
+        for (int i = 0; i < studentenverwaltung->length (); i++) {
+                box->addItem (studentenverwaltung->at (i)->getVorname () + " " + studentenverwaltung->at (i)->getNachname ());
+        }
+        if (index->data ().toString () == "projekt.name") {
+                QList<QMap<QString, QString>*>* projekt = getOneProject (id);
+                qDebug () << projekt->first ()->value ("projekt.vorname") << " " << projekt->first ()->value ("projekt.nachname");
+//                box->setCurrentText (projekt->first ()->value ();
+        }
+
+
+        qDebug () << item;
+}
+
+void DatabaseInterface::getOrgComboItems (QComboBox *box, const QModelIndex *index, int id)
+{
+        QStringList item = index->data ().toString ().split (":");
+
+        box->clear ();
+        for (int i = 0; i < organisationen->length (); i++) {
+                box->addItem (organisationen->at (i)->getOrganisationName ());
+        }
+        if (this->index->row () + 1 > 0) {
+                int forOrg = projekte->at (this->index->row () + 1)->getForeignOrgKey ();
+                box->setCurrentIndex (forOrg - 1);
+        }
+}
+
+void DatabaseInterface::getAnsprechComboItems (QComboBox *box, const QModelIndex *index, int id)
+{
+}
+
+void DatabaseInterface::getView (QListView *view, const QString& type, int id)
+{
+        if (this->listmodel == nullptr)
+                this->listmodel = new QStringListModel ();
+        getValuesFromDatabase (this->listmodel, type, id);
+        view->setModel (this->listmodel);
+}
+
+void DatabaseInterface::getItemView (QListView *view, const QString &type, int id)
+{
+        if (this->model == nullptr)
+                model = new QStandardItemModel ();
+
+        getValuesFromDatabase (this->model, type, id);
+        view->setModel (this->model);
+}
+
+void DatabaseInterface::getMappedWidget (QDataWidgetMapper* mapper, QList<QWidget *> widgets, const QString &type, int id)
+{
+        getValuesFromDatabase (this->model, type, id);
+        mapper->setModel (this->model);
+        for (int i = 0; i < widgets.length (); i++) {
+                if (strcmp (widgets.at (i)->metaObject ()->className (), "QComboBox") == 0) {
+                        qDebug () << widgets.at (i);
+                        if (widgets.at (i)->objectName () == "comboBox_1" ||
+                            widgets.at (i)->objectName () == "comboBox_2" ||
+                            widgets.at (i)->objectName () == "comboBox_3")
+                                getStudentComboItems (static_cast<QComboBox*>(widgets.at (i)), this->index, id);
+                        if (widgets.at (i)->objectName () == "orgCombo")
+                                getOrgComboItems (static_cast<QComboBox*>(widgets.at (i)), this->index, id);
+                }
+                mapper->addMapping (widgets.at (i), i);
+        }
+}
+
+
+QList<QMap<QString, QString>*>* DatabaseInterface::getOneProject (int id)
+{
+        QSqlQuery query;
+        QString statement ("SELECT student.vorname,student.nachname, "
+                           "projekt.proName, projekt.proBesc, projekt.proHin,projekt.proStatus, "
+                           "organisation.orgName, "
+                           "ansprechpartner.vorname, ansprechpartner.nachname, "
+                           "ansprechVerwaltung.vorname, ansprechVerwaltung.nachname "
+                           "FROM student "
+                           "INNER JOIN gruppe USING(gruID) "
+                           "INNER JOIN projekt USING(proID) "
+                           "INNER JOIN organisation USING(orgID) "
+                           "INNER JOIN ansprechpartner USING(ansID) "
+                           "INNER JOIN ansprechVerwaltung ON ansprechVerwaltung.aVerwaltungID = projekt.dozentID "
+                           "WHERE projekt.proID = :proID;");
+
+        query.prepare (statement);
+        query.bindValue (":proID", id);
+        query.exec ();
+
+
+
+
+        QStringList list;
+        list << "student.vorname" << "student.nachname" << "projekt.proName" << "projekt.proBesc" << "projekt.proHin";
+        list << "projekt.proStatus" << "organisation.orgName" << "ansprechpartner.vorname" << "ansprechpartner.nachname";
+        list << "ansprechVerwaltung.vorname" << "ansprechVerwaltung.nachname";
+
+        QList<QMap<QString, QString>*>* projectList = new QList<QMap<QString, QString>*>();
+        while (query.next ()) {
+                QMap<QString, QString>* projectData = new QMap<QString, QString>();
+                for (int i = 0; i < list.length (); i++) {
+                        projectData->insert (list.at (i), query.value (list.at (i)).toString ());
+                }
+                projectList->append (projectData);
+        }
+        return projectList;
+}
+
+
 

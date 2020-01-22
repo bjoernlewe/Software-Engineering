@@ -24,6 +24,10 @@ void on_bescInput_selectionChanged ();
 
 void on_hintInput_selectionChanged ();
 
+void on_buttonBox_accepted ();
+
+void on_buttonBox_rejected ();
+
 private:
 DatabaseInterface* db;
 Ui::InsertProjectDialog *ui;
@@ -31,6 +35,8 @@ void loadOrg ();
 void loadAns (int id);
 void loadStudenten ();
 void loadDozenten ();
+void pushStudenten (bool abletopush);
+void pushProject (bool abletopush);
 };
 
 #endif // INSERTPROJECTDIALOG_H

@@ -13,7 +13,6 @@ LoginScreen::LoginScreen(QWidget *parent, DatabaseInterface* db) :
         else {
                 this->db = db;
         }
-
         connect (m, &MainWindow::backToLogin, this, &LoginScreen::showLogin);
 }
 
@@ -35,6 +34,9 @@ void LoginScreen::on_SignIn_clicked ()
 void LoginScreen::showLogin ()
 {
         this->show ();
+        m->setType ("");
+        m->setCurrentlyLoggedIn (-1);
+        db->setModel (nullptr);
         m->hide ();
 }
 
@@ -43,7 +45,9 @@ void LoginScreen::on_LogIn_clicked ()
         if (checkIfUser (ui->VornameInput->text (), ui->NachnameInput->text (), ui->PasswordInput->text ())) {
                 this->hide ();
                 m->setType (type);
-                m->showMaximized ();
+                m->setCurrentlyLoggedIn (getIDFromVerwaltung (ui->VornameInput->text (), ui->NachnameInput->text (), ui->PasswordInput->text (), this->type));
+                m->login ();
+//                m->showMaximized ();
                 m->show ();
         }
         else{
@@ -93,6 +97,34 @@ bool LoginScreen::checkIfUser (const QString &vorname, const QString &nachname, 
         }
 
         return userExists;
+}
+
+int LoginScreen::getIDFromVerwaltung (const QString &vorname, const QString &nachname, const QString &password, const QString &type)
+{
+        if (type == "Dozent") {
+                auto dozenten = db->getAnsprechVerwaltung ();
+                for (int i = 0; i < dozenten->length (); i++) {
+                        if (dozenten->at (i)->getVorname () == vorname
+                            && dozenten->at (i)->getNachname () == nachname
+                            && dozenten->at (i)->getPassword () == password) {
+                                return dozenten->at (i)->getPrimaryKey ();
+                        }
+                }
+        }
+        else if (type == "Student") {
+                auto studenten = db->getStudentenverwaltung ();
+                for (int i = 0; i < studenten->length (); i++) {
+                        if (studenten->at (i)->getVorname () == vorname
+                            && studenten->at (i)->getNachname () == nachname
+                            && studenten->at (i)->getPassword () == password) {
+                                return studenten->at (i)->getPrimaryKey ();
+                        }
+                }
+        }
+        else {
+                qDebug () << "LoginScreen::getIDFromVerwaltung : No such type " << type;
+        }
+        return -1;
 }
 
 void LoginScreen::on_VornameInput_textChanged (const QString &arg1)

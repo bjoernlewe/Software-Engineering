@@ -8,7 +8,7 @@
 class Projekt
 {
 public:
-Projekt(int id, int organisation, int gruppe, const QString& name, const QString& beschreibung, const QString& hintergrund, bool status);
+Projekt(int id, int organisation, int gruppe, int dozent, const QString& name, const QString& beschreibung, const QString& hintergrund, bool status);
 
 int getPrimaryKey () const;
 void setPrimaryKey (int value);
@@ -28,17 +28,21 @@ void setBeschreibung (const QString &value);
 QString getHintergrund () const;
 void setHintergrund (const QString &value);
 
-bool getStatus () const;
-void setStatus (bool value);
+int getStatus () const;
+void setStatus (int value);
+
+int getForeignDozKey () const;
+void setForeignDozKey (int value);
 
 private:
 int primaryKey;
 int foreignOrgKey;
 int foreignGruKey;
+int foreignDozKey;
 QString projektName;
 QString beschreibung;
 QString hintergrund;
-bool status;
+int status;
 };
 
 #endif // PROJEKT_H

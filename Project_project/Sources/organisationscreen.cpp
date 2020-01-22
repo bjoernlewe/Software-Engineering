@@ -23,13 +23,32 @@ OrganisationScreen::~OrganisationScreen()
 
 void OrganisationScreen::on_addOrg_clicked ()
 {
-        AddOrgDialog a (this);
+        AddOrgDialog a (this, this->db);
 
-        a.exec ();
+
+        if (a.exec () == QDialog::Accepted) {
+                ui->OrgList->update ();
+                if (window ())
+                        window ()->update ();
+                update ();
+        }
 }
 
 void OrganisationScreen::on_remOrg_clicked ()
 {
+        int rowClicked = ui->OrgList->currentRow ();
+
+        qDebug () << "remove_Clicked at " << rowClicked;
+
+        for (int i = 0; i < db->getAnsprechpartner ()->length (); i++) {
+                if (db->getAnsprechpartner ()->at (i)->getForeignKey () == rowClicked) {
+                        db->removeAnsAt (db->getAnsprechpartner ()->at (i)->getPrimaryKey ());
+                        db->getAnsprechpartner ()->removeAt (i);
+                }
+        }
+        db->removeOrgAt (db->getOrganisationen ()->at (rowClicked)->getPrimaryKey ());
+        db->getOrganisationen ()->removeAt (rowClicked);
+        loadOrgList ();
 }
 
 void OrganisationScreen::on_addAns_clicked ()
@@ -46,8 +65,23 @@ void OrganisationScreen::on_addAns_clicked ()
 
 void OrganisationScreen::on_remAns_clicked ()
 {
-        db->getAnsprechpartner ()->removeAt (lastRow);
-        loadTableItems (lastRow - 1);
+        int rowClicked = ui->AnsprechpartnerTable->currentRow ();
+        int idInDataBase = -1;
+        int idInList = -1;
+
+        for (int i = 0; i < db->getAnsprechpartner ()->length (); i++) {
+                if (ui->AnsprechpartnerTable->item (rowClicked, 0)->text () == db->getAnsprechpartner ()->at (i)->getVorname () ||
+                    ui->AnsprechpartnerTable->item (rowClicked, 1)->text () == db->getAnsprechpartner ()->at (i)->getNachname ()) {
+                        idInDataBase = db->getAnsprechpartner ()->at (i)->getPrimaryKey ();
+                        idInList = i;
+                }
+        }
+
+        qDebug () << "remove_Clicked at " << idInDataBase << ", " << idInList;
+
+        db->getAnsprechpartner ()->removeAt (idInList);
+        db->removeAnsAt (idInDataBase);
+        loadTableItems (0);
 }
 
 void OrganisationScreen::on_OrgList_currentRowChanged (int currentRow)

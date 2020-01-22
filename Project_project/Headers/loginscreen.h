@@ -31,6 +31,7 @@ void on_PasswordInput_textChanged (const QString &arg1);
 
 private:
 bool checkIfUser (const QString& vorname, const QString& nachname, const QString& password);
+int getIDFromVerwaltung (const QString& vorname, const QString& nachname, const QString& password, const QString& type);
 QString type;
 DatabaseInterface* db;
 Ui::LoginScreen *ui;

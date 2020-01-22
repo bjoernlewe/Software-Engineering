@@ -37,9 +37,6 @@ SOURCES += \
     Sources/verwaltung.cpp
 
 HEADERS += \
-    Forms/addansdialog.h \
-    Forms/addorgdialog.h \
-    Forms/organisationscreen.h \
     Headers/addansdialog.h \
     Headers/addorgdialog.h \
     Headers/ansprechpartner.h \

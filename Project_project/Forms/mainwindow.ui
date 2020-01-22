@@ -6,17 +6,35 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1116</width>
-    <height>859</height>
+    <width>1129</width>
+    <height>691</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>16777215</width>
+    <height>691</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
+   <property name="maximumSize">
+    <size>
+     <width>16777215</width>
+     <height>650</height>
+    </size>
+   </property>
    <layout class="QGridLayout" name="gridLayout_2">
     <item row="0" column="4">
-     <layout class="QGridLayout" name="ItemGrid" rowstretch="0,0,0,0,0,0,0" rowminimumheight="0,0,0,0,0,0,0">
+     <layout class="QGridLayout" name="ItemGrid" rowstretch="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0">
       <property name="sizeConstraint">
        <enum>QLayout::SetMaximumSize</enum>
       </property>
@@ -38,81 +56,17 @@
       <property name="verticalSpacing">
        <number>30</number>
       </property>
-      <item row="0" column="2">
-       <widget class="QLineEdit" name="lineEdit_1">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="focusPolicy">
-         <enum>Qt::TabFocus</enum>
+      <item row="9" column="2">
+       <widget class="QComboBox" name="comboBox_2"/>
+      </item>
+      <item row="16" column="2">
+       <widget class="QComboBox" name="orgCombo">
+        <property name="insertPolicy">
+         <enum>QComboBox::InsertAtTop</enum>
         </property>
        </widget>
       </item>
-      <item row="1" column="2">
-       <spacer name="verticalSpacer_2">
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
-        </property>
-        <property name="sizeType">
-         <enum>QSizePolicy::MinimumExpanding</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>20</width>
-          <height>170</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item row="0" column="0">
-       <widget class="QLabel" name="label_1">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>80</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>Label 1</string>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="2">
-       <widget class="QComboBox" name="comboBox">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="focusPolicy">
-         <enum>Qt::TabFocus</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="2">
-       <widget class="QLineEdit" name="lineEdit_2">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="focusPolicy">
-         <enum>Qt::TabFocus</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
+      <item row="9" column="0">
        <widget class="QLabel" name="label_2">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
@@ -127,11 +81,106 @@
          </size>
         </property>
         <property name="text">
-         <string>Label 2</string>
+         <string>Student</string>
         </property>
        </widget>
       </item>
-      <item row="5" column="0">
+      <item row="15" column="2">
+       <widget class="QComboBox" name="ansprechCombo"/>
+      </item>
+      <item row="12" column="0">
+       <widget class="QLabel" name="labelDozent">
+        <property name="text">
+         <string>Dozent</string>
+        </property>
+       </widget>
+      </item>
+      <item row="13" column="2">
+       <widget class="QComboBox" name="statusCombo">
+        <item>
+         <property name="text">
+          <string>Abgelehnt</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Angenommen</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Zur Bearbeitung freigegeben</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="8" column="0">
+       <widget class="QLabel" name="label_1">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>80</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>Student</string>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="2">
+       <widget class="QComboBox" name="comboBox_1"/>
+      </item>
+      <item row="5" column="2">
+       <widget class="QTextEdit" name="textEdit_2">
+        <property name="placeholderText">
+         <string>Beschreibung</string>
+        </property>
+       </widget>
+      </item>
+      <item row="11" column="2">
+       <widget class="QComboBox" name="comboBox_3">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::TabFocus</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="2">
+       <widget class="QTextEdit" name="textEdit_1">
+        <property name="placeholderText">
+         <string>Hintergrund</string>
+        </property>
+       </widget>
+      </item>
+      <item row="15" column="0">
+       <widget class="QLabel" name="labelAnsprech">
+        <property name="text">
+         <string>Anspechpartner</string>
+        </property>
+       </widget>
+      </item>
+      <item row="16" column="0">
+       <widget class="QLabel" name="labelOrg">
+        <property name="text">
+         <string>Organisation</string>
+        </property>
+       </widget>
+      </item>
+      <item row="12" column="2">
+       <widget class="QComboBox" name="dozentCombo"/>
+      </item>
+      <item row="11" column="0">
        <widget class="QLabel" name="label_3">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
@@ -146,11 +195,40 @@
          </size>
         </property>
         <property name="text">
-         <string>Label 3</string>
+         <string>Student</string>
         </property>
        </widget>
       </item>
-      <item row="6" column="2">
+      <item row="0" column="2">
+       <widget class="QLineEdit" name="lineEdit_1">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::TabFocus</enum>
+        </property>
+        <property name="inputMethodHints">
+         <set>Qt::ImhNone</set>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+        </property>
+        <property name="placeholderText">
+         <string>Projektname</string>
+        </property>
+       </widget>
+      </item>
+      <item row="13" column="0">
+       <widget class="QLabel" name="labelStatus">
+        <property name="text">
+         <string>Status</string>
+        </property>
+       </widget>
+      </item>
+      <item row="24" column="2">
        <spacer name="verticalSpacer">
         <property name="orientation">
          <enum>Qt::Vertical</enum>
@@ -166,15 +244,18 @@
         </property>
        </spacer>
       </item>
-      <item row="3" column="2">
-       <spacer name="verticalSpacer_3">
+      <item row="17" column="2">
+       <spacer name="verticalSpacer_2">
         <property name="orientation">
          <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::MinimumExpanding</enum>
         </property>
         <property name="sizeHint" stdset="0">
          <size>
           <width>20</width>
-          <height>80</height>
+          <height>60</height>
          </size>
         </property>
        </spacer>
@@ -184,27 +265,11 @@
     <item row="0" column="0">
      <layout class="QGridLayout" name="MenuGrid">
       <property name="sizeConstraint">
-       <enum>QLayout::SetMaximumSize</enum>
+       <enum>QLayout::SetDefaultConstraint</enum>
       </property>
       <property name="rightMargin">
        <number>0</number>
       </property>
-      <item row="1" column="0">
-       <widget class="QListWidget" name="ProjektList">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Maximum" vsizetype="Minimum">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>150</width>
-          <height>16777215</height>
-         </size>
-        </property>
-       </widget>
-      </item>
       <item row="0" column="0">
        <widget class="QLabel" name="ProjektLabel">
         <property name="sizePolicy">
@@ -230,13 +295,38 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="1">
-       <widget class="QTreeWidget" name="ProjektTree">
+      <item row="1" column="0">
+       <widget class="QListView" name="ProjektList">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+         <sizepolicy hsizetype="Maximum" vsizetype="Minimum">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>150</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="editTriggers">
+         <set>QAbstractItemView::NoEditTriggers</set>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QListView" name="ProjektTree">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>0</height>
+         </size>
         </property>
         <property name="maximumSize">
          <size>
@@ -245,60 +335,8 @@
          </size>
         </property>
         <property name="editTriggers">
-         <set>QAbstractItemView::CurrentChanged</set>
+         <set>QAbstractItemView::NoEditTriggers</set>
         </property>
-        <property name="indentation">
-         <number>30</number>
-        </property>
-        <property name="uniformRowHeights">
-         <bool>false</bool>
-        </property>
-        <property name="animated">
-         <bool>true</bool>
-        </property>
-        <attribute name="headerVisible">
-         <bool>false</bool>
-        </attribute>
-        <column>
-         <property name="text">
-          <string>Projekt</string>
-         </property>
-        </column>
-        <item>
-         <property name="text">
-          <string>Projektname</string>
-         </property>
-         <item>
-          <property name="text">
-           <string>Beschreibung</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Hintergrund</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Status</string>
-          </property>
-         </item>
-        </item>
-        <item>
-         <property name="text">
-          <string>ProjektID</string>
-         </property>
-         <item>
-          <property name="text">
-           <string>GruppenID</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>OrganisationID</string>
-          </property>
-         </item>
-        </item>
        </widget>
       </item>
      </layout>
@@ -311,7 +349,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1116</width>
+     <width>1129</width>
      <height>21</height>
     </rect>
    </property>
