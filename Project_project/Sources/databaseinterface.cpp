@@ -917,6 +917,7 @@ QList<int> DatabaseInterface::getProjektID (const QString &type, int id)
 void DatabaseInterface::getValuesFromDatabase (QStandardItemModel* model, const QString& type, int id)
 {
         QList<int> allProIDs = getProjektID (type, id);
+        QList<QStandardItem*>* columnitems = new QList<QStandardItem*>();
 
         model->clear ();
         for (int i = 0; i < allProIDs.length (); i++) {
@@ -926,7 +927,10 @@ void DatabaseInterface::getValuesFromDatabase (QStandardItemModel* model, const 
                         QMapIterator<QString, QString>* iter = new QMapIterator<QString, QString>(*projekts->at (j));
                         QString vorname;
                         QString nachname;
-                        if (!(projekts->at (j)->key (this->index->data ().toString ()).isEmpty ()
+
+                        qDebug () << "Row Index: " << this->index->row ();
+                        auto curr = this->index->data ().toString ();
+                        if (!(projekts->at (j)->key (curr).isEmpty ()
                               || projekts->at (j)->key (this->index->data ().toString ()).isNull ())) {
                                 while (iter->hasNext ()) {
                                         auto item = iter->next ();
@@ -937,7 +941,9 @@ void DatabaseInterface::getValuesFromDatabase (QStandardItemModel* model, const 
                                                         remember << item.key ();
                                                 if (!(item.key () == "projekt.proStatus")) {
                                                         if (!(item.key () == "student.vorname" || item.key () == "student.nachname")) {
-                                                                QStandardItem* newItem = new QStandardItem (item.key () + ":\t\t" + item.value ());
+                                                                QStandardItem* newItem = new QStandardItem (item.key ());
+                                                                QStandardItem* newColumn = new QStandardItem (item.value ());
+                                                                columnitems->append (newColumn);
                                                                 model->appendRow (newItem);
                                                         }
                                                         else {
@@ -948,7 +954,9 @@ void DatabaseInterface::getValuesFromDatabase (QStandardItemModel* model, const 
                                                                         nachname = item.value ();
                                                                 }
                                                                 if (!(nachname.isNull () || nachname.isEmpty () || vorname.isNull () || vorname.isEmpty ())) {
-                                                                        QStandardItem* newItem = new QStandardItem ("student.name:\t\t" + vorname + ", " + nachname);
+                                                                        QStandardItem* newItem = new QStandardItem ("student.name");
+                                                                        QStandardItem* newColumn = new QStandardItem (vorname + ", " + nachname);
+                                                                        columnitems->append (newColumn);
                                                                         model->appendRow (newItem);
                                                                 }
                                                         }
@@ -956,15 +964,20 @@ void DatabaseInterface::getValuesFromDatabase (QStandardItemModel* model, const 
                                                 else{
                                                         QString statusTxt;
                                                         if (item.value () == "0") {
-                                                                statusTxt = "Abgelehnt";
+                                                                statusTxt = "";
                                                         }
                                                         else if (item.value () == "1") {
                                                                 statusTxt = "Angenommen";
                                                         }
-                                                        else{
+                                                        else if (item.value () == "2") {
                                                                 statusTxt = "Zur Bearbeitung freigegeben";
                                                         }
-                                                        QStandardItem* newItem = new QStandardItem (item.key () + ":\t\t" + statusTxt);
+                                                        else {
+                                                                statusTxt = "Abgelehnt";
+                                                        }
+                                                        QStandardItem* newItem = new QStandardItem (item.key ());
+                                                        QStandardItem* newColumn = new QStandardItem (statusTxt);
+                                                        columnitems->append (newColumn);
                                                         model->appendRow (newItem);
                                                 }
                                         }
@@ -972,8 +985,10 @@ void DatabaseInterface::getValuesFromDatabase (QStandardItemModel* model, const 
                         }
                 }
         }
+        model->appendColumn (*columnitems);
         model->sort (0, Qt::SortOrder::DescendingOrder);
 }
+
 
 void DatabaseInterface::getValuesFromDatabase (QStringListModel *model, const QString& type, int id)
 {
@@ -987,40 +1002,37 @@ void DatabaseInterface::getValuesFromDatabase (QStringListModel *model, const QS
         model->setStringList (list);
 }
 
-void DatabaseInterface::getStudentComboItems (QComboBox* box, const QModelIndex* index, int id)
+void DatabaseInterface::getStudentComboItems (QComboBox* box)
 {
-        QStringList item = index->data ().toString ().split (":");
-
         box->clear ();
+        box->addItem ("");
         for (int i = 0; i < studentenverwaltung->length (); i++) {
                 box->addItem (studentenverwaltung->at (i)->getVorname () + " " + studentenverwaltung->at (i)->getNachname ());
         }
-        if (index->data ().toString () == "projekt.name") {
-                QList<QMap<QString, QString>*>* projekt = getOneProject (id);
-                qDebug () << projekt->first ()->value ("projekt.vorname") << " " << projekt->first ()->value ("projekt.nachname");
-//                box->setCurrentText (projekt->first ()->value ();
-        }
-
-
-        qDebug () << item;
 }
 
-void DatabaseInterface::getOrgComboItems (QComboBox *box, const QModelIndex *index, int id)
+void DatabaseInterface::getOrgComboItems (QComboBox *box)
 {
-        QStringList item = index->data ().toString ().split (":");
-
         box->clear ();
         for (int i = 0; i < organisationen->length (); i++) {
                 box->addItem (organisationen->at (i)->getOrganisationName ());
         }
-        if (this->index->row () + 1 > 0) {
-                int forOrg = projekte->at (this->index->row () + 1)->getForeignOrgKey ();
-                box->setCurrentIndex (forOrg - 1);
+}
+
+void DatabaseInterface::getAnsprechComboItems (QComboBox *box)
+{
+        box->clear ();
+        for (int i = 0; i < ansprechpartner->length (); i++) {
+                box->addItem (ansprechpartner->at (i)->getVorname () + " " + ansprechpartner->at (i)->getVorname ());
         }
 }
 
-void DatabaseInterface::getAnsprechComboItems (QComboBox *box, const QModelIndex *index, int id)
+void DatabaseInterface::getDozentComboItems (QComboBox *box)
 {
+        box->clear ();
+        for (int i = 0; i < dozentenverwaltung->length (); i++) {
+                box->addItem (dozentenverwaltung->at (i)->getVorname () + " " + dozentenverwaltung->at (i)->getNachname ());
+        }
 }
 
 void DatabaseInterface::getView (QListView *view, const QString& type, int id)
@@ -1031,7 +1043,7 @@ void DatabaseInterface::getView (QListView *view, const QString& type, int id)
         view->setModel (this->listmodel);
 }
 
-void DatabaseInterface::getItemView (QListView *view, const QString &type, int id)
+void DatabaseInterface::getItemView (QTreeView *view, const QString &type, int id)
 {
         if (this->model == nullptr)
                 model = new QStandardItemModel ();
@@ -1045,17 +1057,27 @@ void DatabaseInterface::getMappedWidget (QDataWidgetMapper* mapper, QList<QWidge
         getValuesFromDatabase (this->model, type, id);
         mapper->setModel (this->model);
         for (int i = 0; i < widgets.length (); i++) {
+                qDebug () << widgets.at (i)->objectName () << ": " << i;
                 if (strcmp (widgets.at (i)->metaObject ()->className (), "QComboBox") == 0) {
                         qDebug () << widgets.at (i);
                         if (widgets.at (i)->objectName () == "comboBox_1" ||
                             widgets.at (i)->objectName () == "comboBox_2" ||
                             widgets.at (i)->objectName () == "comboBox_3")
-                                getStudentComboItems (static_cast<QComboBox*>(widgets.at (i)), this->index, id);
+                                getStudentComboItems (static_cast<QComboBox*>(widgets.at (i)));
                         if (widgets.at (i)->objectName () == "orgCombo")
-                                getOrgComboItems (static_cast<QComboBox*>(widgets.at (i)), this->index, id);
+                                getOrgComboItems (static_cast<QComboBox*>(widgets.at (i)));
+                        if (widgets.at (i)->objectName () == "ansprechCombo")
+                                getAnsprechComboItems (static_cast<QComboBox*>(widgets.at (i)));
+                        if (widgets.at (i)->objectName () == "dozentCombo")
+                                getDozentComboItems (static_cast<QComboBox*>(widgets.at (i)));
+
+                        mapper->addMapping (widgets.at (i), i, "CurrentIndex");
                 }
-                mapper->addMapping (widgets.at (i), i);
+                else {
+                        mapper->addMapping (widgets.at (i), i);
+                }
         }
+        mapper->toFirst ();
 }
 
 

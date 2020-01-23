@@ -67,11 +67,12 @@ int getMaxID (QVector<DozentVerwaltung*>* tmp);
 int getMaxID (QVector<StudentVerwaltung*>* tmp);
 int getMaxID (QVector<Verwaltung*>* tmp);
 
-void getStudentComboItems (QComboBox* box, const QModelIndex* index, int id);
-void getOrgComboItems (QComboBox* box, const QModelIndex* index, int id);
-void getAnsprechComboItems (QComboBox* box, const QModelIndex* index, int id);
+void getStudentComboItems (QComboBox* box);
+void getOrgComboItems (QComboBox* box);
+void getAnsprechComboItems (QComboBox* box);
+void getDozentComboItems (QComboBox* box);
 void getView (QListView* view, const QString& type, int id);
-void getItemView (QListView* view, const QString& type, int id);
+void getItemView (QTreeView* view, const QString& type, int id);
 void getMappedWidget (QDataWidgetMapper* mapper, QList<QWidget*> widgets, const QString& type, int id);
 
 void changeIndex (const QModelIndex &index);

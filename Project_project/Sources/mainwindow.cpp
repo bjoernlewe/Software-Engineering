@@ -13,6 +13,7 @@ MainWindow::MainWindow(QWidget *parent, DatabaseInterface* db)
                 else{
                         this->dbInterface = db;
                 }
+                connect (this, &MainWindow::changeMapperIndex, this, &MainWindow::MapperIndexChanged);
 
                 emit onUpdate ();
         } catch (QString exception) {
@@ -29,12 +30,16 @@ void MainWindow::login ()
 {
         if (currentlyLoggedIn > 0) {
                 initializeWidgetList ();
-                this->view = new QListView ();
-                dbInterface->getMappedWidget (this->mapper, widgets, this->type, currentlyLoggedIn);
+                this->mapper = new QDataWidgetMapper ();
+                this->mapper->setSubmitPolicy (QDataWidgetMapper::AutoSubmit);
+                QModelIndex index (dbInterface->getModel ()->index (0, 1));
+                dbInterface->changeIndex (index);
+//                setupMapper ();
+                dbInterface->getMappedWidget (this->mapper, this->widgets, this->type, this->currentlyLoggedIn);
                 dbInterface->getView (ui->ProjektList, this->type, currentlyLoggedIn);
                 dbInterface->getItemView (ui->ProjektTree, this->type, currentlyLoggedIn);
+//                this->mapper->toFirst ();
                 setAppropriateWidgetsHidden ();
-//                setAppropriateWidgetsEnabled ();
                 setAppropriateWidgetsEnabled (&this->type);
         }
         else {
@@ -67,6 +72,13 @@ void MainWindow::setAppropriateWidgetsHidden (const QModelIndex* index)
         if (index != nullptr)
                 qDebug () << "MainWindow::setAppropriateWidgetsHidden(" << index->data ().toString ().split (":").at (0) << ")";
         if (index == nullptr) {
+                ui->label_1->setHidden (true);
+                ui->label_2->setHidden (true);
+                ui->label_3->setHidden (true);
+                ui->labelStatus->setHidden (true);
+                ui->labelOrg->setHidden (true);
+                ui->labelAnsprech->setHidden (true);
+                ui->labelDozent->setHidden (true);
                 for (int i = 0; i < widgets.length (); i++) {
                         widgets.at (i)->setHidden (true);
 //                        qDebug () << widgets.at (i)->objectName () << " is set hidden.";
@@ -165,7 +177,7 @@ void MainWindow::setAppropriateWidgetsEnabled (const QString* type)
                 ui->comboBox_1->setEnabled (false);
                 ui->comboBox_2->setEnabled (false);
                 ui->comboBox_3->setEnabled (false);
-                ui->orgCombo->setEnabled (true);
+                ui->orgCombo->setEnabled (false);
                 ui->ansprechCombo->setEnabled (false);
                 ui->dozentCombo->setEnabled (false);
                 ui->statusCombo->setEnabled (false);
@@ -188,31 +200,24 @@ void MainWindow::initializeWidgetList ()
 
         widgets.append (ui->textEdit_2);
 
-        widgets.append (ui->label_1);
         ui->label_1->setBuddy (ui->comboBox_1);
         widgets.append (ui->comboBox_1);
 
-        widgets.append (ui->label_2);
         ui->label_2->setBuddy (ui->comboBox_2);
         widgets.append (ui->comboBox_2);
 
-        widgets.append (ui->label_3);
         ui->label_3->setBuddy (ui->comboBox_3);
         widgets.append (ui->comboBox_3);
 
-        widgets.append (ui->labelStatus);
         ui->labelStatus->setBuddy (ui->statusCombo);
         widgets.append (ui->statusCombo);
 
-        widgets.append (ui->labelDozent);
         ui->labelDozent->setBuddy (ui->dozentCombo);
         widgets.append (ui->dozentCombo);
 
-        widgets.append (ui->labelAnsprech);
         ui->labelAnsprech->setBuddy (ui->ansprechCombo);
         widgets.append (ui->ansprechCombo);
 
-        widgets.append (ui->labelOrg);
         ui->labelOrg->setBuddy (ui->orgCombo);
         widgets.append (ui->orgCombo);
 }
@@ -220,6 +225,33 @@ void MainWindow::initializeWidgetList ()
 void MainWindow::setWidgetVisible (QWidget* widget)
 {
         widget->setHidden (false);
+}
+
+void MainWindow::setupMapper ()
+{
+        dbInterface->getOrgComboItems (ui->orgCombo);
+        dbInterface->getDozentComboItems (ui->dozentCombo);
+        dbInterface->getStudentComboItems (ui->comboBox_1);
+        dbInterface->getStudentComboItems (ui->comboBox_2);
+        dbInterface->getStudentComboItems (ui->comboBox_3);
+        dbInterface->getAnsprechComboItems (ui->ansprechCombo);
+        mapper->setModel (dbInterface->getModel ());
+        mapper->addMapping (ui->lineEdit_1, 0);
+        mapper->addMapping (ui->textEdit_1, 1);
+        mapper->addMapping (ui->textEdit_2, 2);
+        mapper->addMapping (ui->comboBox_1, 3, "currentIndex");
+        mapper->addMapping (ui->comboBox_2, 4, "currentIndex");
+        mapper->addMapping (ui->comboBox_3, 5, "currentIndex");
+        mapper->addMapping (ui->orgCombo, 6, "currentIndex");
+        mapper->addMapping (ui->ansprechCombo, 7, "currentIndex");
+        mapper->addMapping (ui->dozentCombo, 8, "currentIndex");
+        mapper->addMapping (ui->statusCombo, 9, "currentIndex");
+        mapper->toFirst ();
+}
+
+void MainWindow::MapperIndexChanged (int index)
+{
+        this->mapper->setCurrentIndex (index);
 }
 
 void MainWindow::on_actionLog_Out_triggered ()
@@ -260,7 +292,8 @@ void MainWindow::on_ProjektList_activated (const QModelIndex &index)
         qDebug () << "MainWindow::on_ProjektList_activated(" << index.data () << ")";
         QModelIndex* i = new QModelIndex (index);
 
-        dbInterface->setIndex (i);
+        dbInterface->changeIndex (index);
+        dbInterface->getItemView (ui->ProjektTree, this->type, currentlyLoggedIn);
 }
 
 void MainWindow::on_ProjektList_entered (const QModelIndex &index)
@@ -268,7 +301,8 @@ void MainWindow::on_ProjektList_entered (const QModelIndex &index)
         qDebug () << "MainWindow::on_ProjektList_entered(" << index.data () << ")";
         QModelIndex* i = new QModelIndex (index);
 
-        dbInterface->setIndex (i);
+        dbInterface->changeIndex (index);
+        dbInterface->getItemView (ui->ProjektTree, this->type, currentlyLoggedIn);
 }
 
 void MainWindow::on_ProjektList_clicked (const QModelIndex &index)
@@ -281,19 +315,21 @@ void MainWindow::on_ProjektList_clicked (const QModelIndex &index)
 void MainWindow::on_ProjektTree_clicked (const QModelIndex &index)
 {
         setAppropriateWidgetsHidden (&index);
-        ui->orgCombo->setCurrentIndex (dbInterface->getProjekte ()->at (dbInterface->getIndex ()->row ())->getForeignOrgKey ());
+        emit changeMapperIndex (lastClickedRow);
 }
 
 void MainWindow::on_ProjektTree_activated (const QModelIndex &index)
 {
         setAppropriateWidgetsHidden (&index);
-        ui->orgCombo->setCurrentIndex (dbInterface->getProjekte ()->at (dbInterface->getIndex ()->row ())->getForeignOrgKey ());
+        lastClickedRow = index.row ();
+        emit changeMapperIndex (lastClickedRow);
 }
 
 void MainWindow::on_ProjektTree_entered (const QModelIndex &index)
 {
         setAppropriateWidgetsHidden (&index);
-        ui->orgCombo->setCurrentIndex (dbInterface->getProjekte ()->at (dbInterface->getIndex ()->row ())->getForeignOrgKey ());
+        mapper->toNext ();
+//        emit changeMapperIndex (lastClickedRow);
 }
 
 void MainWindow::on_statusCombo_currentIndexChanged (int index)

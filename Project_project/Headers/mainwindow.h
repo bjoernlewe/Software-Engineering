@@ -35,10 +35,12 @@ void setCurrentlyLoggedIn (int value);
 signals:
 void onUpdate ();
 void backToLogin ();
+void changeMapperIndex (int index);
 
 private:
 Ui::MainWindow *ui;
 QString type;
+int lastClickedRow = -1;
 QDataWidgetMapper* mapper;
 int currentlyLoggedIn = -1;
 QList<QWidget*> widgets;
@@ -47,11 +49,13 @@ void setAppropriateWidgetsHidden (const QModelIndex* index = nullptr);
 void setAppropriateWidgetsEnabled (const QString* type = nullptr);
 void initializeWidgetList ();
 void setWidgetVisible (QWidget* widget);
+void setupMapper ();
 
 protected:
 DatabaseInterface* dbInterface;
 
 private slots:
+void MapperIndexChanged (int index);
 void on_actionLog_Out_triggered ();
 void on_actionGruppe_triggered ();
 void on_actionOrganisation_triggered ();
